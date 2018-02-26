@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CSS盒子模型总结</title>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+			
+			
+		}
+	</style>
+</head>
+<body>
+	<!-- 盒子模型
+		盒子模型：标准盒子模型，IE盒子模型
+
+		区别： 盒子模型的宽度和高度计算方式不一样
+
+		标准盒子模型 width(页面中占据的宽/高) = content（css设置的宽/高） + 2 * padding + 2 * border 
+		IE盒子模型  width(页面中占据的宽/高) = css设置的宽/高
+
+		怎么让浏览器统一使用标准盒子模型？ 设置html5的文档类型，即为<!doctype html>
+
+		怎么让css设置的宽高等于页面中占据的宽高/设置这2种模式？ 
+			box-sizing属性，box-sizing: border-box; ie 盒子模式
+			box-sizing: content-box; 标准 盒子模式
+
+
+		js如何获取盒子模型对应的宽和高？
+			1： var secWidth = oSec.style.width;
+			 //只能获取内联样式中获取的宽/高，eg, style="width: 110px"
+
+			2： var secFinalWidth = window.getComputedStyle(oSec).width || oSec.currentStyle.width; 
+			//获取元素的最终样式的宽/高 , dom.currentStyle.width只是支持IE window.getComputedStyle(dom).width支持chrome
+		
+			3： var secPosition = oSec.getBoundingClientRect() //场景，获取元素相对viewport的绝对位置
+			//也能获取元素的真实宽/高，bottom：110，height:100，left:0，right:770.4000244140625，top:10，
+			//width:770.4000244140625，x:0，y:10
+
+		根据盒子模型解释边距重叠？
+			1, 父子元素边距重叠
+			2, 兄弟元素边距重叠：(上面兄弟元素)margin-bottom: 20px；（下面兄弟元素）margin-top: 5px; 会发生边距合并为20px;
+			3, 空元素边距重叠：margin-top: 20px; margin-bottom: 5px;
+
+			外边距甚至可以与本身发生叠加。假设有一个空元素，他有外边距，但是没有边框或内边距。在这种情况下，顶外边距与底外边距就碰到了一起，它们会发生叠加。
+
+			css的盒子模型里是这样规定两个对象之间的距离的：对象之间的间距是由两个对象的盒子模型的最终计算值得出来的，也就是说两个对象之间的间距就是两个对象的距离，但是当遇到两个对象一个有下外边距margin，一个有上外边距margin
+			这是css的一个特性，当空白边叠加时，以较大的margin值为准。
+
+		BFC(边距重叠解决方案) 块级格式上下文
+		原理/渲染规则：1， BFC垂直方向边距发生重叠
+						2，BFC不会与浮动元素发生边距重叠
+						3，BFC元素是一个独立的容器，里面与外面互相不影响
+						4，计算高度时，BFC浮动元素也会计算
+		如何创建BFC
+			1, overflow的值不为visible
+			2, float的值不为none
+			3, display的值为table-cell, table-caption, inline-block中的一个值
+			4，position的值不为relative和static(定位默认值)
+		应用场景
+			左右布局的方式
+			清除浮动
+
+
+	-->
+
+	<section class="box" id="sec"> 
+		<style>
+			#sec {
+				background-color: red;
+			}
+			#sec .child {
+				height: 100px;
+				margin-top: 10px;
+				background-color: yellow;
+			}
+		</style>
+		<article class="child"></article>
+	</section>
+
+	<section id="margin-over">
+		<style>
+			.null-el {
+				margin-top: 20px;
+				margin-bottom: 5px;
+			}
+			.test-el {
+				margin-top: 10px;
+				height: 10px;
+				background-color: pink;
+			}
+		</style>
+
+		<div class="null-el"></div>
+		<div class="test-el"></div>
+	</section>
+	<script>
+		var oSec = document.getElementById('sec');
+		var secWidth = oSec.style.width; //只能获取内联样式中获取的宽/高，eg, style="width: 110px"
+
+		var secFinalWidth = window.getComputedStyle(oSec).width || oSec.currentStyle.width; 
+		//获取元素的最终样式的宽/高 , dom.currentStyle.width只是支持IE window.getComputedStyle(dom).width支持chrome
+		
+		var secPosition = oSec.getBoundingClientRect() //场景，获取元素相对viewport的绝对位置
+		//也能获取元素的真实宽/高，bottom：110，height:100，left:0，right:770.4000244140625，top:10，
+		//width:770.4000244140625，x:0，y:10
+	
+	</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>阿里笔试</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		ul.list li {
+			border: 1px solid red;
+			margin: 10px 0;
+		}
+		ul.list li span {
+			font-size: 20px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+
+	<ul class="list">
+		<li> **** 第一行<span class="del">x</span></li>
+		<li> **** 第二行<span class="del">x</span></li>
+		<li> **** 第三行<span class="del">x</span></li>
+		<li> **** 第四行<span class="del">x</span></li>
+		<li> **** 第五行<span class="del">x</span></li>
+	</ul>
+
+<script>
+	class List {
+		constructor(selector) {
+			let self = this;
+			this.el = Array.from(document.querySelectorAll(selector));
+			this.el.forEach(item => {
+				item.addEventListener('click', function(e) {
+					if(e.target.className.indexOf('del') > -1) {
+						self.removeItem.call(self, e.target);
+					}
+				})
+			});
+		}
+		removeItem(target) {
+			let self = this;
+			let findParent = function(node) {
+				let parent = node.parentNode;
+				let root = self.el.find(item => item === parent);
+				if(root) {
+					root.removeChild(node);
+				} else {
+				  	findParent(parent);
+				}
+			};
+			findParent(target);
+		}
+	}
+
+	window.addEventListener('DOMContentLoaded', function() {
+		new List('.list')
+	})
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>flat设计</title>
+</head>
+<body>
+
+<script>
+    //输入['a',['b','c'],2,]
+    //输出a,b,c,2
+    var tempArray = ['a',['b', 'c'],2,['d','e','f'],'g',3,4];
+    /**
+     * 递归
+     * @param arrObj
+     * @return
+     */
+
+    function flat(arrObj) {
+      if(Object.prototype.toString.call(arrObj) !== '[object Array]') return '参数错误';
+      var result = [];
+      var each = function(array) {
+        array.forEach( function(item) {
+          if(item instanceof Array) {
+            each(item)
+          } else {
+            result.push(item)
+          }
+        });
+      }
+      each(arrObj);
+      return result.join(',');
+    }
+    console.log(flat(tempArray))
+
+    /**
+     * 修改toString方法
+     * @param  arrObj
+     * @return
+     */
+    function flat2(arrObj) {
+      Array.prototype.toString = function() {
+        return this.join(',')
+      }
+      return arrObj + '';
+    }
+
+    /**
+     * toString严谨写法
+     * @param  arrObj
+     * @return
+     */
+    function flat3(arrObj) {
+      var toString = Array.prototype.toString;
+      Array.prototype.toString = function() {
+        return this.join(',')
+      }
+      var result = arrObj + '';
+      Array.prototype.toString = toString;
+      return result;
+    }
+
+    console.log(flat3(tempArray))
+    
+    /**
+     * valueOf格式转换--同理toString
+     * @param arrObj
+     * @return
+     */
+    function flat4(arrObj) {
+      Array.prototype.valueOf = function() {
+        return this.join(',')
+      }
+      return arrObj + '';
+    }
+    
+    Array.prototype[Symbol.iterator] = function() {
+      let arr = [].concat(this);
+      let getFirst = function(array) {
+        return array.shift()
+      }
+      return {
+        next: function() {
+          let item = getFirst(arr);
+          if(item) {
+            return {
+              value: item,
+              done: false
+            }
+          } else {
+            return {
+              done: true
+            }
+          }
+        }
+      }
+    }
+    /**
+     * 使用遍历器
+     * @param  arrObj
+     * @return
+     */
+    function flat5(arrObj) {
+      let result = [];
+      for(let v of arrObj) {
+        result.push(v)
+      }
+      return result.join(',')
+    }
+    console.log(flat5(tempArray));
+
+</script>
+
+</body>
+</html>
