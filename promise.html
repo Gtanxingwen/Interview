@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>promise实现原理</title>
+</head>
+<body>
+<script>
+    function MyPromise(fn) {
+      let value = null;
+      let state = 'pending';
+      let callbacks = [];
+
+      this.then = function (onFulfilled) {
+        if(state === 'pending') {
+          callbacks.push(onFulfilled)
+          return this
+        }
+        onFulfilled(value)
+        return this
+
+      }
+
+      function resolve(cbValue) {
+        value = cbValue;
+        state = 'fulfilled';
+        setTimeout(function () { //此处异步为了让resolve在 then 注册回掉之后执行
+          callbacks.forEach(function (callback) {
+            callback(cbValue)
+          })
+        }, 0)
+
+      }
+
+      fn(resolve)
+    }
+    let myP = new MyPromise(function (resolve, reject) {
+      resolve('test')
+    }).then(function (data) {
+      console.log(data)
+    })
+</script>
+</body>
+</html>

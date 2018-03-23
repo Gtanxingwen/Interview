@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>spa页面路由实现原理1-history.api</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		a {
+			margin-right: 20px;
+			color: blue;
+			cursor: pointer;
+			font-size: 20px;
+		}
+	</style>
+</head>
+<body>
+	<article class="app">
+		<a class="route a">a.html</a>
+		<a class="route b">b.html</a>
+	</article>
+	<script>
+		// 注册路由
+		document.querySelectorAll('.route').forEach(item => {
+			item.addEventListener('click', (e) => {
+				e.preventDefault();
+				let link = item.textContent;
+				console.log(link)
+				//pushState的参数（传递的参数，标题，url）
+				window.history.pushState({name: 'a'}, link, link);
+			}, false)
+		})
+		//监听前进后退
+		window.addEventListener('popstate', (e) => {
+			console.log(e)
+		}, false);
+	</script>
+</body>
+</html>
