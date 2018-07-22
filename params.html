@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+</head>
+<body>
+
+<script>
+  var url = 'http://www.nowcoder.com?key=1&key=2&key=3&test=4#hehe'
+  function getUrlParam(sUrl, sKey) {
+    if(sUrl.indexOf('?') == -1) {
+      if(!sKey)
+        return {}
+      else
+        return ''
+    }
+    var url = sUrl.split('?')[1]
+    var search = url.indexOf('#') > -1 ? url.split('#')[0] : url;
+    var params = search.split('&') || [];
+    var cbparams;
+    var temp;
+    if(sKey) {
+      cbparams = [];
+      params.forEach(function(item, index) {
+        temp = item.split('=');
+        if(temp[0] === sKey) {
+          cbparams.push(temp[1]);
+        }
+      })
+      if(cbparams.length < 2) {
+        cbparams = cbparams.join('');
+      }
+    } else {
+      cbparams = {};
+      params.forEach(function(item, index) {
+        temp = item.split('=');
+        if(!(temp[0] in cbparams)) {
+          cbparams[temp[0]] = []
+        }
+        cbparams[temp[0]].push(temp[1])
+      })
+    }
+    return cbparams;
+  }
+  var val = getUrlParam(url, 'key')
+  console.log(val)
+</script>
+</body>
+</html>

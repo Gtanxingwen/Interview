@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>右边固定-左边自适应</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .layout {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+        .layout div {
+            color: white;
+            font-size: 20px;
+            line-height: 200px;
+            text-align: center;
+        }
+        .layout .left {
+            background-color: blue;
+        }
+        .layout .right {
+            background-color: red;
+        }
+        /*table-cell布局  完美*/
+        .layout-table {
+            display: table;
+        }
+        .layout-table div {
+            height: 100%;
+            display: table-cell;
+        }
+        .layout-table .right {
+            width: 300px;
+        }
+        
+        
+        
+        /*layout-flex*/
+        .layout-flex {
+            display: flex;
+            justify-content: flex-start;
+        }
+        .layout-flex div {
+            height: 200px;
+        }
+        .layout-flex .left {
+            flex: 1;
+        }
+        .layout-flex .right {
+            width: 300px;
+        }
+        /*layout-grid*/
+        .layout-grid {
+            display: grid;
+            grid-template-columns: auto 300px;
+        }
+    </style>
+</head>
+<body>
+    <!--table-cell-->
+    <section class="layout layout-table">
+        <div class="left"></div>
+        <div class="right">table布局</div>
+    </section>
+    <!--flex-->
+    <section class="layout layout-flex">
+        <div class="left"></div>
+        <div class="right">flex布局</div>
+    </section>
+    <!--grid-->
+    <section class="layout layout-grid">
+        <div class="left"></div>
+        <div class="right">grid布局</div>
+    </section>
+</body>
+</html>
