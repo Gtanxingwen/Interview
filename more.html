@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    /*
+  Pen Setup
+*/
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .thumbnails {
+      position: relative;
+      height: 100px;
+      padding: 10px;
+      overflow: hidden;
+      background: #ddd;
+      counter-reset: item-count;
+    }
+
+    .thumbnails__item {
+      float: left;
+      width: 100px;
+      height: 100px;
+      background: #444;
+      border-radius: 3px;
+      margin: 0 0 10px 10px;
+    }
+
+    .thumbnails__item:first-child {
+      margin-left: 0;
+    }
+
+    .thumbnails__count {
+      display: none;
+      width: 80px;
+      height: 100px;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      background: #fff;
+      border-radius: 3px;
+    }
+
+    .thumbnails__count-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-size: 1.25em;
+    }
+
+    .thumbnails__count-value::after {
+      content: counter(item-count);
+    }
+
+    /*
+      Trick part
+      It doesn't need SASS/Less loops to work. Loop is just for DRY.
+      You can check the compiled CSS for seeing the result of this loop.
+    */
+    @media (max-width: 319px) {
+      .thumbnails__item:nth-child(1) ~ .thumbnails__item {
+        counter-increment: item-count;
+      }
+    }
+
+    @media (max-width: 9px) {
+      .thumbnails__item:nth-child(0) ~ .thumbnails__count {
+        display: block;
+      }
+
+      .thumbnails__item:nth-child(-1) {
+        margin-right: 90px;
+      }
+    }
+
+    @media (max-width: 429px) {
+      .thumbnails__item:nth-child(2) ~ .thumbnails__item {
+        counter-increment: item-count;
+      }
+    }
+
+    @media (max-width: 119px) {
+      .thumbnails__item:nth-child(1) ~ .thumbnails__count {
+        display: block;
+      }
+
+      .thumbnails__item:nth-child(0) {
+        margin-right: 90px;
+      }
+    }
+
+    @media (max-width: 539px) {
+      .thumbnails__item:nth-child(3) ~ .thumbnails__item {
+        counter-increment: item-count;
+      }
+    }
+
+    @media (max-width: 229px) {
+      .thumbnails__item:nth-child(2) ~ .thumbnails__count {
+        display: block;
+      }
+
+      .thumbnails__item:nth-child(1) {
+        margin-right: 90px;
+      }
+    }
+
+    @media (max-width: 649px) {
+      .thumbnails__item:nth-child(4) ~ .thumbnails__item {
+        counter-increment: item-count;
+      }
+    }
+
+    @media (max-width: 339px) {
+      .thumbnails__item:nth-child(3) ~ .thumbnails__count {
+        display: block;
+      }
+
+      .thumbnails__item:nth-child(2) {
+        margin-right: 90px;
+      }
+    }
+
+    @media (max-width: 759px) {
+      .thumbnails__item:nth-child(5) ~ .thumbnails__item {
+        counter-increment: item-count;
+      }
+    }
+
+    @media (max-width: 449px) {
+      .thumbnails__item:nth-child(4) ~ .thumbnails__count {
+        display: block;
+      }
+
+      .thumbnails__item:nth-child(3) {
+        margin-right: 90px;
+      }
+    }
+
+    @media (max-width: 869px) {
+      .thumbnails__item:nth-child(6) ~ .thumbnails__item {
+        counter-increment: item-count;
+      }
+    }
+
+    @media (max-width: 559px) {
+      .thumbnails__item:nth-child(5) ~ .thumbnails__count {
+        display: block;
+      }
+
+      .thumbnails__item:nth-child(4) {
+        margin-right: 90px;
+      }
+    }
+
+    @media (max-width: 979px) {
+      .thumbnails__item:nth-child(7) ~ .thumbnails__item {
+        counter-increment: item-count;
+      }
+    }
+
+    @media (max-width: 669px) {
+      .thumbnails__item:nth-child(6) ~ .thumbnails__count {
+        display: block;
+      }
+
+      .thumbnails__item:nth-child(5) {
+        margin-right: 90px;
+      }
+    }
+
+    @media (max-width: 1089px) {
+      .thumbnails__item:nth-child(8) ~ .thumbnails__item {
+        counter-increment: item-count;
+      }
+    }
+
+    @media (max-width: 779px) {
+      .thumbnails__item:nth-child(7) ~ .thumbnails__count {
+        display: block;
+      }
+
+      .thumbnails__item:nth-child(6) {
+        margin-right: 90px;
+      }
+    }
+
+    @media (max-width: 1199px) {
+      .thumbnails__item:nth-child(9) ~ .thumbnails__item {
+        counter-increment: item-count;
+      }
+    }
+
+    @media (max-width: 889px) {
+      .thumbnails__item:nth-child(8) ~ .thumbnails__count {
+        display: block;
+      }
+
+      .thumbnails__item:nth-child(7) {
+        margin-right: 90px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+<section class="thumbnails">
+  <div class="thumbnails__item"></div>
+  <div class="thumbnails__item"></div>
+  <div class="thumbnails__item"></div>
+  <div class="thumbnails__item"></div>
+  <div class="thumbnails__item"></div>
+  <div class="thumbnails__item"></div>
+  <div class="thumbnails__item"></div>
+  <div class="thumbnails__item"></div>
+  <div class="thumbnails__count">
+    <p class="thumbnails__count-text">
+      +<span class="thumbnails__count-value"></span> more items
+    </p>
+  </div>
+</section>
+</body>
+</html>

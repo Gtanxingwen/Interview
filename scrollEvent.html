@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>scrollEvent</title>
+  <style>
+    body {
+      height: 2000px;
+    }
+
+    .test {
+      width: 210px;
+      height: 200px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+<div id="test" class="test">
+  <img src="./img/mm2.jpg">
+</div>
+<script>
+  function uniqueScroll(dom) {
+    let eventType = document.mozFullScreen !== undefined ? 'DOMMouseScroll' : 'mousewheel'
+    dom.addEventListener(eventType, (event) => {
+      let scrollTop = dom.scrollTop,
+        scrollHeight = dom.scrollHeight,
+        height = dom.clientHeight;
+
+      console.log(event.wheelDelta)
+
+      let delta = (event.wheelDelta) ? event.wheelDelta : -(event.detail || 0);
+
+      if ((delta > 0 && scrollTop <= delta) || (delta < 0 && scrollHeight - height - scrollTop <= -1 * delta)) {
+        // IE浏览器下滚动会跨越边界直接影响父级滚动，因此，临界时候手动边界滚动定位
+        dom.scrollTop = delta > 0 ? 0 : scrollHeight;
+        // 向上滚 || 向下滚
+        event.preventDefault();
+      }
+    }, false)
+  }
+
+  let img = document.querySelector('img')
+  console.log(document.querySelector('img'))
+  uniqueScroll(img)
+</script>
+</body>
+</html>

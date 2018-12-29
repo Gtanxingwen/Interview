@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>media</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    #media-box {
+      width: 200px;
+      height: 200px;
+      font-size: 16px;
+      border: 1px solid red;
+      margin: 20px auto;
+    }
+
+    @media screen and (max-width: 1440px) {
+      #media-box {
+        width: 400px;
+      }
+    }
+
+    @media screen and (max-width: 1366px) {
+      #media-box {
+        width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="media-box">
+  我是测试媒体查询有时不生效的原因
+</div>
+</body>
+</html>

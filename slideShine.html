@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .bg {
+      background: #000;
+      width: 1000px;
+      height: 300px;
+      margin: 0 auto;
+      padding-top: 100px;
+    }
+
+    .slideShine {
+      width: 1000px;
+      font-size: 60px;
+      text-align: center;
+      background: #111 -webkit-linear-gradient(left, #111, #fff) 0 0 no-repeat;
+      -webkit-background-size: 80px;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: rgba(255, 255, 255, 0.3);
+      animation: slideShine 3s infinite;
+    }
+
+    @-webkit-keyframes slideShine {
+      　from {
+        background-position: 0 0;
+      }
+      　to {
+        background-position: 100% 100%;
+      }
+    }
+
+    　　
+  </style>
+</head>
+<body>
+<div class="bg">
+  <p class="slideShine">Welcome to xinpureZhu Blog</p>
+</div>
+</body>
+</html>
