@@ -29,6 +29,9 @@
 			Parent1.call(this); //apply也可实现，区别在于apply传参传的是数组
 			this.type = 'child2';
 		}
+
+    Child1.prototype.speak = function () {
+    };
 		console.log(new Child1())
 		/**
 		 * 借助原型链实现继承
@@ -43,6 +46,7 @@
 			this.type = 'child2'
 		}
 		Child2.prototype = new Parent2(); //子类的原型对象引用父类的实例
+    console.log(new Child2());
 		console.log(new Child2().__proto__.name);
 
 		/**
@@ -79,6 +83,7 @@
 		Child4.prototype = Parent4.prototype; 
 		var s5 = new Child3();
 		var s6 = new Child3();
+    console.log('======')
 		console.log(s5, s6)
 		/**
        * 组合继承的优化2 ---完美的方案

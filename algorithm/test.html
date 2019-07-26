@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>test</title>
+</head>
+<body>
+<button id="btn">测试点击防抖</button>
+<script>
+  let a = {
+    valueOf() {
+      console.log('valueOf')
+      return 2
+    },
+    toString() {
+      console.log('toString')
+      return 'a'
+    },
+    [Symbol.toPrimitive]() {
+      // 优先级最高
+      console.log('symbol')
+      return 2
+    }
+  }
+
+  function Parent(name) {
+    this.name = name
+  }
+
+  let child = new Parent()
+  console.log(child.__proto__ === Parent.prototype)
+  console.log(Parent.prototype.constructor === Parent)
+  console.log(Parent.prototype.__proto__ === Object.prototype)
+  console.log(Parent.prototype)
+  console.log(Parent)
+  console.log(child.constructor)
+  console.log(child.__proto__.constructor)
+  console.log(Object.prototype.__proto__)
+
+  /*
+   child
+    --- __proto__ ---> 
+                      Parent.prototype
+                       --- __proto__ --->
+                                          Object.prototype
+                                           --- __proto__ --->
+                                                              null
+   */
+  console.log('---------------------------')
+
+  /**
+   * instanceOf 原理
+   * @param left
+   * @param right
+   * @returns {boolean}
+   */
+  function myInstanceOf(left, right) {
+    let rightPrototype = right.prototype
+    let left__proto__ = left.__proto__
+
+    while (true) {
+      if (left__proto__ === null) {
+        return false
+      }
+      if (left__proto__ === rightPrototype) {
+        return true
+      }
+      left__proto__ = left__proto__.__proto__
+    }
+  }
+
+  let myThis = {
+    name: 'tanxingwen',
+    f2() {
+      'use strict'
+      console.log(this.name)
+    }
+  }
+  myThis.f2()
+
+  /**
+   * 延迟执行防抖函数
+   */
+  function debounce(func, wait = 500) {
+    let timer = 0
+    return function (...args) {
+      if (timer) clearTimeout(timer)
+      timer = setTimeout(() => {
+        func.apply(this, args)
+      }, wait)
+    }
+  }
+
+  function debounceIme(func, wait = 50, immediate = true) {
+    let timer, context, args
+
+    const later = () => setTimeout(() => {
+      timer = null
+
+      if (!immediate) {
+        func.apply(context, args)
+        context = args = null
+      }
+    }, wait)
+
+    return function (...params) {
+      if (!timer) {
+        timer = later()
+        if (immediate) {
+          func.apply(this, params)
+        } else {
+          context = this
+          args = params
+        }
+      } else {
+        clearTimeout(timer)
+        timer = later()
+      }
+    }
+  }
+
+  let btn = document.querySelector('#btn')
+  btn.addEventListener('click', debounceIme(btnClick))
+
+  function btnClick() {
+    console.log('btn click')
+  }
+
+  Function.prototype.myCall = function (context) {
+    var _context = context || window
+    _context.fn = this
+    var args = [...arguments].slice(1)
+    var res = _context.fn(context, args)
+    delete _context.fn
+    return res
+  }
+  Function.prototype.myApply = function (context) {
+    var _context = context || window
+    _context.fn = this
+    var res
+    if (arguments[1]) {
+      res = _context.fn(context, arguments[1])
+    } else {
+      res = _context.fn(context)
+    }
+    delete _context.fn
+    return res
+  }
+  Function.prototype.myBind = function (context) {
+    var _this = this
+    var args = [...arguments].slice(1)
+    return function F() {
+      if (this instanceof F) {
+        return new _this(...args, ...arguments)
+      }
+      return _this.apply(context, args.concat(...arguments))
+    }
+  }
+
+  const flatMap = arr => Array.isArray(arr) ? arr.reduce((a, b) => [...a, ...flatMap(b)], []) : [arr]
+
+  function jsonp(url, callback, success) {
+    let script = document.createElement('script')
+    script.src = url
+    script.async = true
+    script.type = 'text/javascript'
+    window[callback] = function (data) {
+      success && success(data)
+    }
+    document.body.appendChild(script)
+  }
+
+  Array.prototype.map = function (callback) {
+    let _this = this
+    return _this.reduce((total, cur, i) => {
+      total.push(callback(cur, i, _this))
+      return total
+    }, [])
+  }
+
+  var thisa = {
+    b: () => {
+      console.log(this);
+    },
+    c: function () {
+      console.log(this);
+    }
+  }
+  thisa.b(); // this -> window
+  thisa.c(); // this -> thisa
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>时间转换</title>
+</head>
+<body>
+<script>
+  function parseDate(date) {
+    let time = new Date(date)
+    let diff = new Date() - time
+    if (diff < 60 * 1000) {
+      return '刚刚'
+    } else if (diff < 60 * 60 * 1000) {
+      return Math.floor(diff / (60 * 1000)) + '分钟前'
+    } else if (diff < 60 * 60 * 24 * 1000) {
+      return Math.floor(diff / (60 * 60 * 1000)) + '小时前'
+    } else if (diff < 60 * 60 * 24 * 2 * 1000) {
+      return Math.floor(diff / (60 * 60 * 24 * 1000)) + '天前'
+    } else {
+      let month = time.getMonth() + 1
+      let day = time.getDate()
+      return time.getFullYear() + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day)
+    }
+  }
+
+  let state = parseDate('2019-06-10')
+  console.log(state)
+</script>
+</body>
+</html>

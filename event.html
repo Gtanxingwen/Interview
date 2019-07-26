@@ -2,8 +2,27 @@
 <html>
 <head>
 	<title>dom事件总结</title>
+  <meta charset="UTF-8">
 </head>
 <body>
+<div id="node">节点</div>
+<script>
+  var node = document.getElementById('node')
+  node.addEventListener(
+    'click',
+    event => {
+      console.log('冒泡')
+    },
+    false
+  )
+  node.addEventListener(
+    'click',
+    event => {
+      console.log('捕获 ')
+    },
+    true
+  )
+</script>
 <!-- DOM事件总结
 	基本概念/DOM事件级别？
 		DOM0 element.onclick = function() {}

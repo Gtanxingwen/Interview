@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>固定页脚</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    body {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      height: 80px;
+      background-color: #47c4fd;
+    }
+
+    footer {
+      height: 100px;
+      background-color: #47c4fd;
+    }
+
+    main {
+      flex: 1 0 auto;
+    }
+
+    main p {
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Header</h1>
+</header>
+<main>
+  <p>Content...</p>
+</main>
+<footer>
+  <p>Footer</p>
+</footer>
+</body>
+</html>

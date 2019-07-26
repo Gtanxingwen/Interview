@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>正则</title>
+</head>
+<body>
+<input class="file" type="file">
+<script>
+  var file = document.querySelector('.file')
+  file.addEventListener('change', function (e) {
+    var fileRead = new FileReader()
+    fileRead.readAsText(e.target.files[0])
+    fileRead.onload = function () {
+      var text = fileRead.result
+      // text = text.match(/[\s\S]+/g)[0]
+      var textArr = text.split(/[\r\n]+/)
+      var arr = []
+      textArr.forEach(function (item) {
+        arr.push(item.split(/\s+/))
+      })
+      console.log(arr)
+    }
+  })
+</script>
+<script>
+  let txt = `aa "55" $c b
+  nn (8*) q 12
+  true sdc 12 2w2`
+  let rows = txt.split('\n')
+  let results = []
+  rows.forEach(row => {
+    results.push(row.trim().split(/\s/))
+  })
+  console.log(results)
+</script>
+</body>
+</html>

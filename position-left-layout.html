@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>github左边固定布局</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background-color: #24292e;
+      color: hsla(0, 0%, 100%, .7);
+      text-align: center;
+      font-size: 18px;
+      line-height: 60px;
+      height: 60px;
+    }
+
+    .main {
+      display: flex;
+      height: 1000px;
+      flex-wrap: nowrap;
+    }
+
+    .main .left {
+      width: 350px;
+      background-color: #f6f8fa;
+      border-bottom: 1px solid #e1e4e8;
+      border-right: 1px solid #e1e4e8;
+      box-sizing: border-box;
+    }
+
+    .fixContainer {
+      width: 350px;
+      background-color: #999;
+      color: white;
+    }
+
+    .main .content {
+      flex: 1;
+      background-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0) 60%, #fff), linear-gradient(70deg, #dbedff 32%, #ebfff0);
+    }
+
+    .footer {
+      height: 2000px;
+    }
+  </style>
+</head>
+<body>
+<div class="header">我是header</div>
+<div class="main">
+  <div class="left">
+    <div class="fixContainer">飘啊飘啊飘~~~~~~~~</div>
+  </div>
+  <div class="content"></div>
+</div>
+<div class="footer"></div>
+<script>
+  var $left = document.querySelector('.fixContainer')
+  var $html = document.querySelector('html')
+  var $window = document.documentElement || document.body
+
+  // 初始化$left 高度
+  // htmlH - winH = maxScrollTop
+  var htmlH = $html.offsetHeight
+  var winH = $window.clientHeight
+  var maxScrollTop = htmlH - winH
+
+  // 初始化
+  init()
+  // 监听scroll
+  window.addEventListener('scroll', handleScroll, false)
+
+  // 监听resize
+
+  function handleScroll() {
+    var sH = winH - 60
+    var scrollTop =
+      (document.documentElement && document.documentElement.scrollTop) ||
+      document.body.scrollTop
+    if (scrollTop > 60) {
+      $left.style.left = 0
+      $left.style.top = 0
+      $left.style.position = 'fixed'
+      $left.style.height = winH + 'px'
+      console.log('当前scrollTop= ', scrollTop)
+    } else {
+      $left.style.height = sH + 'px'
+      $left.style.position = 'static'
+      $left.style.left = 'unset'
+      $left.style.top = 'unset'
+    }
+  }
+
+  function init() {
+    var h = winH - 60
+    $left.style.height = h + 'px'
+  }
+</script>
+</body>
+</html>

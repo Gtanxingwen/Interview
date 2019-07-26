@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>proxy_defineProperty</title>
+</head>
+<body>
+<script>
+  let obj = new Proxy({}, {
+    get: function (target, key, receiver) {
+      return Reflect.get(target, key, receiver)
+    },
+    set: function (target, key, value, receiver) {
+      return Reflect.set(target, key, value, receiver)
+    }
+  })
+  obj.a = 2
+
+  // console.log(obj.a)
+  class Observe {
+    constructor(data) {
+      Object.keys(data).forEach(key => {
+        this[key] = data[key]
+        this.defineReactive(data, key)
+      })
+    }
+
+    defineReactive(obj, key, val) {
+      Object.defineProperty(obj, key, {
+        configurable: true,
+        enumerable: true,
+        get() {
+          console.log('getter')
+          return this[key]
+        },
+        set(newVal) {
+          console.log('setter')
+          this[key] = newVal
+        }
+      })
+    }
+  }
+
+  let w = new Observe({a: 1})
+  console.log(w.a)
+  w.a = 2
+  // let bValue
+  // let o = { a: 3 }
+  // Object.defineProperty(o, 'a', {
+  //   get() {
+  //     console.log('getter')
+  //     return bValue
+  //   },
+  //   set(newVal) {
+  //     bValue = newVal
+  //   }
+  // })
+  // o.a = 3
+  // console.log(bValue)
+</script>
+</body>
+</html>

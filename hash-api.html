@@ -27,13 +27,11 @@
         item.addEventListener('click', (e) => {
           e.preventDefault();
           let link = item.textContent;
-          console.log(link)
           location.hash = link;
         }, false)
       })
       //监听前进后退 --监听路由
       window.addEventListener('hashchange', (e) => {
-        console.log(e)
         console.log(location.hash)
       }, false);
     </script>

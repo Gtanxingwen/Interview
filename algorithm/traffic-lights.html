@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>红绿灯</title>
+</head>
+<body>
+<script>
+  var sleep = function (color, time) {
+    return new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        resolve(color)
+      }, time)
+    })
+  }
+
+  function flash() {
+    sleep('red', 3000).then(res => {
+      console.log(res)
+      sleep('yellow', 1000).then(res => {
+        console.log(res)
+        sleep('green', 1000).then(res => {
+          console.log(res)
+          flash()
+        })
+      })
+    })
+  }
+
+  flash()
+</script>
+</body>
+</html>

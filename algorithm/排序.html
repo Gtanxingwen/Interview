@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>排序的几种方式</title>
+</head>
+<body>
+<script>
+  let arr = [2, 6, 11, 4, 8]
+
+  function swap(arr, left, right) {
+    let temp = arr[left]
+    arr[left] = arr[right]
+    arr[right] = temp
+  }
+
+  // 冒泡排序
+  function bubleSort() {
+    for (let i = arr.length - 1; i > 0; i--) {
+      for (let j = 0; j < i; j++) {
+        if (arr[j] > arr[j + 1]) {
+          swap(arr, j, j + 1)
+        }
+      }
+    }
+    console.log(arr)
+  }
+
+  bubleSort()
+
+  // 插入排序
+  function insertSort() {
+    for (let i = 1; i < arr.length; i++) {
+      for (let j = i - 1; j >= 0; j--) {
+        if (arr[j] > arr[j + 1]) {
+          swap(arr, j, j + 1)
+        }
+      }
+    }
+    console.log(arr)
+  }
+
+  insertSort()
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>event-emit</title>
+</head>
+<body>
+<!--实现一个事件类 Event，包括 on()，off()，once()，emit() 方法-->
+<script>
+  class Event {
+    constructor() {
+      this.events = {}
+    }
+
+    on(event, fn) {
+      if (!this.events[event]) {
+        this.events[event] = []
+      }
+      this.events[event].push(fn)
+    }
+
+    emit() {
+      let event = Array.prototype.shift.call(arguments)
+      let fns = this.events[event]
+      let args = arguments
+      fns.forEach(fn => {
+        fn(...Array.from(args))
+      })
+    }
+
+    once(event, fn) {
+      let that = this
+      if (!this.events[event]) {
+        this.events[event] = []
+      }
+      const onceFn = function () {
+        fn.apply(that, arguments)
+        that.off(event, onceFn)
+      }
+      this.events[event].push(onceFn)
+    }
+
+    off(event, fn) {
+      let fns = this.events[event]
+      if (fns) {
+        this.events[event] = fns.filter(item => item !== fn)
+      }
+    }
+  }
+
+  let myEvent = new Event()
+  myEvent.once('test', function (data) {
+    console.log('test once', data)
+  })
+  myEvent.on('test', function (data) {
+    console.log('test on', data)
+  })
+  setTimeout(() => {
+    myEvent.emit('test', 'first')
+  }, 3000)
+  setTimeout(() => {
+    myEvent.emit('test', 'last')
+  }, 6000)
+</script>
+</body>
+</html>

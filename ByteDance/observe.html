@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>observe</title>
+</head>
+<body>
+<script>
+  class Observer {
+    constructor(data) {
+      // your code
+      this.events = {}
+      Object.keys(data).forEach(key => {
+        this[key] = data[key]
+      })
+    }
+
+    get a() {
+      // return
+    }
+
+    set a(val) {
+      this.$emit('a', val)
+      console.log(this)
+    }
+
+    $on(name, cb) {
+      // your code
+      if (!this.events[name]) {
+        this.events[name] = []
+      }
+      this.events[name].push(cb)
+    }
+
+    $emit(name) {
+      // your code
+      let fns = this.events[name]
+      let args = [...arguments].slice(1)
+      if (fns) {
+        fns.forEach(cb => cb(...args))
+      }
+    }
+  }
+
+  const w = new Observer({a: 1});
+  w.$on('a', (v) => {
+    console.log('first ', v)
+  })
+
+  w.$on('a', (v) => {
+    console.log('second ', v)
+  })
+  console.log(w)
+  w.a = 2; // console: first 2  second 2
+
+  w.$emit('a', 3); // console: first 3  second 3
+  // w.a === 3; // true
+</script>
+</body>
+</html>

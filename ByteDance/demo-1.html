@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  var letterCombinations = function (digits) {
+    digits = digits + '';
+    let letterList = {
+      2: ['a', 'b', 'c'],
+      3: ['d', 'e', 'f'],
+      4: ['g', 'h', 'i'],
+      5: ['j', 'k', 'l'],
+      6: ['m', 'n', 'o'],
+      7: ['p', 'q', 'r', 's'],
+      8: ['t', 'u', 'v'],
+      9: ['w', 'x', 'y', 'z']
+    };
+
+    let result = [];
+
+    for (var i = 0; i < digits.length; i++) {
+      let num = digits[i];
+      if (result == "") {
+        result = letterList[num];
+      } else {
+        let list = [];
+        for (var j = 0; j < result.length; j++) {
+          for (var k = 0; k < letterList[num].length; k++) {
+            list.push(result[j] + letterList[num][k]);
+          }
+        }
+        result = list;
+      }
+    }
+
+    return result;
+  };
+  // console.log(letterCombinations('234'))
+  let A = [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0], K = 2
+  var longestOnes = function (A, K) {
+    let cnt = 0
+    let pos = 0
+    let ans = 0
+    A.forEach((item, index) => {
+      if (item === 0) {
+        cnt++
+      }
+      while (cnt > K) {
+        if (A[pos] === 0) cnt--
+        pos++
+      }
+      ans = Math.max(ans, index + 1 - pos)
+    })
+    console.log(ans)
+    return ans
+  };
+  // longestOnes(A, K)
+  let s = "aab"
+  let p = "c*a*b"
+  var isMatch = function (s, p) {
+    let len = s.length
+    let pre = ''
+    let status = true
+    while (len > 0) {
+      if (s[0] === p[0]) {
+        if (p[1] === '*') {
+          pre = p[0]
+        }
+        s = s.slice(1)
+        p = p.slice(1)
+      } else {
+        if (p[1] !== '*') {
+          return false
+        }
+        if (p[0] === '.') {
+          status = true
+          s = s.slice(1)
+          p = p.slice(1)
+        } else if (p[0] === '*') {
+          status = s[0] === pre
+          if (status) {
+            s = s.slice(1)
+            p = p.slice(1)
+          }
+        } else {
+          status = false
+          len = 0
+        }
+      }
+    }
+    return true
+  };
+  console.log(isMatch(s, p))
+
+  // 输入: [5,2,6,1]
+  // 输出: [2,1,1,0]
+  let nums = [5, 2, 6, 1]
+  var countSmaller = function (nums) {
+    var temp = [];
+    var result = [];
+    for (var i = nums.length - 1; i >= 0; i--) {
+      var left = 0;
+      var right = temp.length;
+      while (left < right) {
+        var mid = left + parseInt((right - left) / 2);
+        if (temp[mid] >= nums[i])
+          right = mid;
+        else
+          left = mid + 1;
+
+      }
+      result[i] = left;
+      temp.splice(left, 0, nums[i]);
+    }
+    return result;
+  };
+  console.log(countSmaller(nums))
+
+
+  var dateArr = ['2018-01-20', '2017-02-19', '2016-08-08', '2018-12-09'];
+
+  function sortByDate(dateArr) {
+    dateArr.sort(function (a, b) {
+      return Date.parse(b.replace(/-/g, "/")) - Date.parse(a.replace(/-/g, "/"));
+    });
+    return dateArr;
+  }
+
+  console.log(sortByDate(dateArr));
+
+  Array.prototype.findDuplicate2 = function (count) {
+    return this.reduce((re, val) => {
+      let index = re.findIndex(o => o.val === val)
+      debugger
+      if (index >= 0) {
+        re[index].count++
+      } else {
+        re.push({
+          count: 1,
+          val
+        })
+      }
+      return re
+    }, []).filter(o => o.count >= count).map(o => o.val)
+  };
+
+  var arr = [1, 2, 3, 3, 4, 4, 4, 4, 4, 4];
+  console.log(arr.findDuplicate2(4));
+</script>
+</body>
+</html>

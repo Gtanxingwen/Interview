@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>千分符</title>
+</head>
+<body>
+<script>
+  function MyNew() {
+    var obj = new Object()
+    var con = [].shift.call(arguments)
+    obj.__proto__ = con.prototype
+    var result = con.apply(obj, arguments)
+    return typeof result === 'object' ? result : obj
+  }
+</script>
+</body>
+</html>

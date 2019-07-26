@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>实现call&apply</title>
+</head>
+<body>
+<script>
+  let a = {
+    value: 1
+  }
+
+  function getValue(name, age) {
+    console.log(name)
+    console.log(age)
+    console.log(this.value)
+  }
+
+  Function.prototype.myCall = function (context) {
+    var context = context || window
+    // 给 context 添加一个属性
+    // getValue.call(a, 'yck', '24') => a.fn = getValue
+    context.fn = this
+    // 将 context 后面的参数取出来
+    var args = [...arguments].slice(1)
+    // getValue.call(a, 'yck', '24') => a.fn('yck', '24')
+    var result = context.fn(...args)
+    // 删除 fn
+    delete context.fn
+    return result
+  }
+  getValue.myCall(a, 'yck', '24')
+  // getValue.apply(a, ['yck', '24'])
+</script>
+</body>
+</html>

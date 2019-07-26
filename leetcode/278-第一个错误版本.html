@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>第一个错误版本</title>
+</head>
+<body>
+<script>
+  const isBadVersion = v => v > 6
+  const firstBadVersion = n => {
+    let low = 1
+    let high = n
+    let v
+    while (true) {
+      let mid = Math.floor((high - low) / 2) + 1
+      if (isBadVersion(mid)) { // 是错误版本
+        // 在左边找
+        high = mid - 1
+      } else if (!isBadVersion(mid - 1)) { // 前一个不是错误版本
+        v = mid
+        break
+      } else { // 不是错误版本
+        // 在右边找
+        low = mid + 1
+      }
+    }
+    return v
+  }
+  console.log(firstBadVersion(12))
+</script>
+</body>
+</html>

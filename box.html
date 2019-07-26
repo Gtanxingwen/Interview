@@ -6,23 +6,44 @@
 		* {
 			margin: 0;
 			padding: 0;
-			
-			
+    }
+
+    .div {
+      width: 40px;
+      height: 30px;
+      border: 1px solid #999;
+    }
+
+    #box1 {
+      margin-bottom: 20px;
+    }
+
+    #box2 {
+      margin-top: -10px;
+    }
+
+    #box3 {
+      margin-top: 10px;
+      margin-bottom: 30px;
 		}
 	</style>
 </head>
 <body>
-	<!-- 盒子模型
+<div class="div" id="box1"></div>
+<div class="div" id="box2"></div>
+<div id="box3"></div>
+<pre>
+		<!-- 盒子模型
 		盒子模型：标准盒子模型，IE盒子模型
 
 		区别： 盒子模型的宽度和高度计算方式不一样
 
-		标准盒子模型 width(页面中占据的宽/高) = content（css设置的宽/高） + 2 * padding + 2 * border 
+		标准盒子模型 width(页面中占据的宽/高) = content（css设置的宽/高） + 2 * padding + 2 * border
 		IE盒子模型  width(页面中占据的宽/高) = css设置的宽/高
 
 		怎么让浏览器统一使用标准盒子模型？ 设置html5的文档类型，即为<!doctype html>
 
-		怎么让css设置的宽高等于页面中占据的宽高/设置这2种模式？ 
+		怎么让css设置的宽高等于页面中占据的宽高/设置这2种模式？
 			box-sizing属性，box-sizing: border-box; ie 盒子模式
 			box-sizing: content-box; 标准 盒子模式
 
@@ -31,17 +52,27 @@
 			1： var secWidth = oSec.style.width;
 			 //只能获取内联样式中获取的宽/高，eg, style="width: 110px"
 
-			2： var secFinalWidth = window.getComputedStyle(oSec).width || oSec.currentStyle.width; 
+			2： var secFinalWidth = window.getComputedStyle(oSec).width || oSec.currentStyle.width;
 			//获取元素的最终样式的宽/高 , dom.currentStyle.width只是支持IE window.getComputedStyle(dom).width支持chrome
-		
+
 			3： var secPosition = oSec.getBoundingClientRect() //场景，获取元素相对viewport的绝对位置
 			//也能获取元素的真实宽/高，bottom：110，height:100，left:0，right:770.4000244140625，top:10，
 			//width:770.4000244140625，x:0，y:10
 
 		根据盒子模型解释边距重叠？
-			1, 父子元素边距重叠
+			1, 父元素与其第一个或最后一个子元素之间(
+			如果在父元素与其第一个子元素之间不存在边框、内边距、行内内容，也没有创建块格式化上下文、或者清除浮动将两者的 margin-top 分开；
+			或者在父元素与其最后一个子元素之间不存在边框、内边距、行内内容、height、min-height、max-height将两者的 margin-bottom 分开，
+			那么这两对外边距之间会产生折叠。此时子元素的外边距会“溢出”到父元素的外面。)
 			2, 兄弟元素边距重叠：(上面兄弟元素)margin-bottom: 20px；（下面兄弟元素）margin-top: 5px; 会发生边距合并为20px;
-			3, 空元素边距重叠：margin-top: 20px; margin-bottom: 5px;
+			3, 空的块级元素
+			如果一个块级元素中不包含任何内容，并且在其 margin-top 与 margin-bottom 之间没有边框、内边距、行内内容、height、min-height 将两者分开，
+			则该元素的上下外边距会折叠。
+			注意：
+			上述情况的组合会产生更复杂的外边距折叠。
+			即使某一外边距为0，这些规则仍然适用。因此就算父元素的外边距是0，第一个或最后一个子元素的外边距仍然会“溢出”到父元素的外面。
+			如果参与折叠的外边距中包含负值，折叠后的外边距的值为最大的正边距与最小的负边距（即绝对值最大的负边距）的和。
+			如果所有参与折叠的外边距都为负，折叠后的外边距的值为最小的负边距的值。这一规则适用于相邻元素和嵌套元素。
 
 			外边距甚至可以与本身发生叠加。假设有一个空元素，他有外边距，但是没有边框或内边距。在这种情况下，顶外边距与底外边距就碰到了一起，它们会发生叠加。
 
@@ -61,9 +92,9 @@
 		应用场景
 			左右布局的方式
 			清除浮动
-
-
 	-->
+	</pre>
+
 
 	<section class="box" id="sec"> 
 		<style>

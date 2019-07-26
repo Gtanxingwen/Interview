@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>实现promise</title>
+</head>
+<body>
+<script>
+  function MyPromise(fun) {
+    var that = this
+    this.status = 'pending'
+    this.data = null
+    this.error = null
+    var resolve = function (data) {
+      that.changeStatus('success')
+      that.successCb && that.successCb(data)
+      that.data = data
+    }
+    var reject = function (e) {
+      that.changeStatus('error')
+      that.errorCb && that.errorCb(e)
+      that.error = e
+    }
+    fun && fun(resolve, reject)
+  }
+
+  MyPromise.prototype.then = function (cb, errCb) {
+    if (this.data) {
+      cb && cb()
+    }
+    if (this.error) {
+      errCb && errCb()
+    }
+    this.successCb = cb
+    this.errorCb = errCb
+    return this
+  }
+  MyPromise.prototype.changeStatus = function (status) {
+    this.status = status
+  }
+
+  var myPro = new MyPromise(function (resolve, reject) {
+    setTimeout(() => {
+      resolve('ok')
+    }, 3000)
+  })
+  myPro.then(function (res) {
+    console.log('then 回调')
+    console.log(res)
+  })
+</script>
+
+<script>
+  function MyPromise(fn) {
+    let _this = this
+    _this.value = ''
+    _this.err = ''
+    _this.status = 'pending'
+
+    _this.resolveCbs = []
+    _this.rejectCbs = []
+
+    _this.resolve = function (data) {
+      if (_this.status === 'pending') {
+        _this.status = 'resolved'
+        _this.value = data
+        _this.resolveCbs.forEach(cb => cb(data))
+      }
+    }
+    _this.reject = function (err) {
+      if (_this.status === 'pending') {
+        _this.status = 'resolved'
+        _this.err = err
+        _this.resolveCbs.forEach(cb => {
+          throw err
+        })
+      }
+    }
+
+    fn(_this.resolve, _this.reject)
+  }
+
+  MyPromise.prototype.then = function (resolveCb, rejectCb) {
+    if (this.value) {
+      resolveCb && resolveCb()
+    }
+    if (this.err) {
+      rejectCb && rejectCb()
+    }
+    resolveCb && this.resolveCbs.push(resolveCb)
+    rejectCb && this.rejectCbs.push(rejectCb)
+    return this
+  }
+</script>
+</body>
+</html>

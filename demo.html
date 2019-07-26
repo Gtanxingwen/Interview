@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo</title>
+</head>
+<body>
+<!--
+请为所有数组对象添加一个findDuplicate(n)方法，用于返回该数组中出现频率>=n的元素列表
+-->
+<!--
+versions是一个项目的版本号列表，因多人维护，不规则
+
+var versions=['1.45.0','1.5','6','3.3.3.3.3.3.3']
+要求从小到大排序，注意'1.45'比'1.5'大
+
+var sorted=['1.5','1.45.0','3.3.3.3.3.3','6']
+-->
+<script>
+  Array.prototype.findDuplicate = function (n) {
+    let array = this
+    let obj = {}
+    let result = []
+    array.forEach(item => {
+      if (!obj[item]) {
+        obj[item] = 1
+      } else {
+        obj[item]++
+      }
+    })
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (obj[key] >= n) {
+          result.push(key)
+        }
+      }
+    }
+    return result
+  }
+  console.log([2, 2, 3, 3, 1, 4].findDuplicate(2))
+
+  var versions = ['1.45.0', '1.5', '6', '3.3.3.3.3.3.3']
+  versions.sort(function (a, b) {
+    return a - b
+  })
+  console.log(versions)
+
+
+  function compareStr(left, right) {
+    let lefts = left.split('.')
+    let rights = right.split('.')
+    let len = Math.max(lefts.length, rights.length)
+    let flag = false
+    for (let i = 0; i < len; i++) {
+      let _left = lefts[i] || 0
+      let _right = rights[i] || 0
+      if (_left > _right) {
+        flag = true
+        break
+      }
+    }
+    return flag
+  }
+
+  function versionSort(versions) {
+    let len = versions.length
+    for (let i = len - 1; i > 0; i--) { // n + n-1 + n-2 + ..
+      for (let j = 0; j < i; j++) {
+        if (compareStr(versions[j], versions[j + 1])) {
+          let temp = versions[j + 1]
+          versions[j + 1] = versions[j]
+          versions[j] = temp
+        }
+      }
+    }
+
+  }
+
+
+  function B() {
+  }
+
+  function N() {
+  }
+
+  // es5
+  B.prototype = Object.create(N.prototype)
+  B.prototype.constructor = B
+  // es6
+  Object.setPrototype(B.prototype, N.prototype)
+
+
+  class Observer {
+    constructor(data) {
+      // your code
+      this.data = data
+    }
+
+    $on(name, cb) {
+      // your code
+      Object.defineProperty(this.data, name, {
+        get() {
+          let v = this.data[name]
+          cb(v)
+          return v
+        }
+      })
+    }
+
+    $emit(name, value) {
+      // your code
+      Object.defineProperty(this.data, name, {
+        set() {
+          this.data[name] = value
+          return value
+        }
+      })
+    }
+  }
+
+  const w = new Observer({a: 1});
+  w.$on('a', (v) => {
+    console.log('first ', v)
+  })
+
+  w.$on('a', (v) => {
+    console.log('second ', v)
+  })
+
+  w.a = 2; // console: first 2  second 2
+
+  w.$emit('a', 3); // console: first 3  second 3
+  w.a === 3; // true
+</script>
+</body>
+</html>

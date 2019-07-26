@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>mutationObserve</title>
+</head>
+<body>
+<div id="id" data-content="tanxingwen">我是被监听的dom</div>
+<button onclick="changeDom('dom')">dom-添加子节点</button>
+<button onclick="changeDom('attr')">dom-添加属性</button>
+<script>
+  function changeDom(type) {
+    let targetNode = document.querySelector(`#id`);
+    if (type === 'dom') {
+      let ul = document.createElement('ul')
+      ul.innerHTML = `<li>我是李</li>`
+      targetNode.appendChild(ul)
+    }
+    if (type === 'attr') {
+      targetNode.setAttribute('data-content', 'wenzi')
+    }
+
+  }
+
+  // Select the node that will be observed for mutations
+  let targetNode = document.querySelector(`#id`);
+
+  // Options for the observer (which mutations to observe)
+  let config = {
+    attributes: true,
+    childList: true,
+    subtree: true
+  };
+
+  // Callback function to execute when mutations are observed
+  const mutationCallback = (mutationsList) => {
+    for (let mutation of mutationsList) {
+      let type = mutation.type;
+      switch (type) {
+        case "childList":
+          console.log("A child node has been added or removed.");
+          break;
+        case "attributes":
+          console.log(`The ${mutation.attributeName} attribute was modified.`);
+          break;
+        case "subtree":
+          console.log(`The subtree was modified.`);
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  // Create an observer instance linked to the callback function
+  let observer = new MutationObserver(mutationCallback);
+  console.log(observer)
+
+  // Start observing the target node for configured mutations
+  observer.observe(targetNode, config);
+
+  // Later, you can stop observing
+  // observer.disconnect();
+</script>
+</body>
+</html>

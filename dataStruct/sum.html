@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>sum</title>
+</head>
+<body>
+<script>
+  function sum(a, b) {
+    if (a === 0) return b
+    if (b === 0) return a
+    var _a = a ^ b
+    var _b = (a & b) << 1
+    return sum(_a, _b)
+  }
+
+  var _sum = sum(3, 5)
+  console.log(_sum)
+</script>
+</body>
+</html>
