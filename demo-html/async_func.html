@@ -9,6 +9,7 @@
   function spawn(genF) {
     return new Promise(function (resolve, reject) {
       const gen = genF();
+      debugger
 
       function step(nextF) {
         let next;

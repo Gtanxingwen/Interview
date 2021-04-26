@@ -59,6 +59,25 @@
     // arr[left] = temp
     [arr[right], arr[left]] = [arr[left], arr[right]]
   }
+
+  var sortColors = function (nums) {
+    let left = -1
+    let right = nums.length
+    let i = 0
+    // 下标如果遇到 right，说明已经排序完成
+    while (i < right) {
+      if (nums[i] == 0) {
+        swap(nums, i++, ++left)
+      } else if (nums[i] == 1) {
+        i++
+      } else {
+        swap(nums, i, --right)
+      }
+      debugger
+    }
+    return nums
+  }
+  console.log(sortColors([2, 0, 2, 1, 1, 0]))
 </script>
 </body>
 </html>

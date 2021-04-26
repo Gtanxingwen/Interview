@@ -24,7 +24,7 @@
       let fns = this.events[event]
       let args = arguments
       fns.forEach(fn => {
-        fn(...Array.from(args))
+        fn(...args)
       })
     }
 

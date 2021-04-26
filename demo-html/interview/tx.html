@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  // 利用原型和原型链相关知识，画出 Object、 Function、Object.prototype、Function.prototype 四个对象间的关联关系
+
+  function fn() {
+    var n = 9;
+
+    function add() {
+      console.log(n++);
+    }
+
+    return {
+      n: n,
+      add: add
+    }
+  }
+
+  var t1 = fn();
+  var t2 = fn();
+
+  t1.add();
+  console.log(t1.n);
+
+  t2.add();
+  console.log(t2.n);
+  // 9 9 9 9
+</script>
+</body>
+</html>

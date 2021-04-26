@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+
+  class Observer {
+    constructor(obj) {
+      // your code
+      this.events = {}
+
+      // 监听对象属性
+      Object.keys(obj).forEach((key) => {
+        this.defineReactive(this, key, obj[key])
+      })
+    }
+
+    $on(name, cb) {
+      // your code
+      if (!this.events[name]) {
+        this.events[name] = []
+      }
+      this.events[name].push(cb)
+    }
+
+    $emit(name, value) {
+      // your code
+      this[name] = value
+    }
+
+    _emit(name, value) {
+      const fns = this.events[name]
+      if (fns) {
+        fns.forEach(fn => fn(value))
+      }
+    }
+
+    defineReactive(obj, key, val) {
+      const _this = this
+      Object.defineProperty(obj, key, {
+        enumerable: true,
+        configurable: true,
+        set(newVal) {
+          val = newVal
+          _this._emit(key, val)
+        },
+        get() {
+          return val
+        }
+      })
+    }
+
+  }
+
+  const w = new Observer({a: 1});
+  w.$on('a', (v) => {
+    console.log('first ', v)
+  })
+
+  w.$on('a', (v) => {
+    console.log('second ', v)
+  })
+
+  w.a = 2; // console: first 2  second 2
+
+  w.$emit('a', 3); // console: first 3  second 3
+  console.log(w.a === 3); // true
+</script>
+</body>
+</html>

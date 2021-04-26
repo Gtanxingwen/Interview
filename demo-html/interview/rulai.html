@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>统计字符</title>
+</head>
+<body>
+<script>
+  const testObj = {
+    name: 'Tan Xingwen',
+    age: 26,
+    marry: false,
+    children: [
+      {name: 'Tom, son', age: 1},
+      {name: 'jack', age: 0}
+    ],
+    gf: {name: 'Zhou Lin', work: '财务'}
+  }
+  let result = {}
+
+  function calcChar(obj) {
+    Object.values(obj).forEach(item => {
+      countChar(item, result)
+    })
+  }
+
+  function countChar(item) {
+    if (Array.isArray(item)) {
+      item.forEach(obj => {
+        calcChar(obj)
+      })
+    } else if (typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean') {
+      let rows = item.toString().toLowerCase().split('')
+      let i = 0
+      while (i < rows.length) {
+        if (result[rows[i]]) {
+          result[rows[i]]++
+        } else {
+          result[rows[i]] = 1
+        }
+        i++
+      }
+    } else if (Object.prototype.toString.call(item) === '[object Object]') {
+      calcChar(item)
+    }
+  }
+
+  calcChar(testObj)
+  console.log(result)
+</script>
+</body>
+</html>

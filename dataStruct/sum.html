@@ -16,6 +16,35 @@
 
   var _sum = sum(3, 5)
   console.log(_sum)
+  var isAnagram = function (s, t) {
+    function asc(a, b) {
+      return a.charCodeAt(0) - b.charCodeAt(0)
+    }
+
+    let a = s.split('').sort(asc).join()
+    let b = t.split('').sort(asc).join()
+    return a === b
+  };
+  isAnagram("anagram", "nagaram")
+  /**
+   * @param {string} s
+   * @return {boolean}
+   */
+  var isPalindrome = function (s) {
+    if (!s) return true
+    let strs = s.replace(/[^0-9a-zA-Z]/g, '').toLowerCase()
+
+    return strs.join('') === strs.reverse().join('')
+  };
+  console.log(isPalindrome("race a car"))
+  var countAndSay = function (n) {
+    let prev = '1'
+    for (let i = 1; i < n; i++) {
+      prev = prev.replace(/(\d)\1*/g, item => `${item.length}${item[0]}`)
+    }
+    return prev
+  };
+  countAndSay(4)
 </script>
 </body>
 </html>

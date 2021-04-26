@@ -16,6 +16,7 @@
 
     #box1 {
       margin-bottom: 20px;
+      width: 150px !important;
     }
 
     #box2 {
@@ -29,7 +30,7 @@
 	</style>
 </head>
 <body>
-<div class="div" id="box1"></div>
+<div class="div" id="box1" style="width: 200px"></div>
 <div class="div" id="box2"></div>
 <div id="box3"></div>
 <pre>
@@ -96,7 +97,7 @@
 	</pre>
 
 
-	<section class="box" id="sec"> 
+<section class="box" id="sec">
 		<style>
 			#sec {
 				background-color: red;
@@ -130,13 +131,14 @@
 		var oSec = document.getElementById('sec');
 		var secWidth = oSec.style.width; //只能获取内联样式中获取的宽/高，eg, style="width: 110px"
 
-		var secFinalWidth = window.getComputedStyle(oSec).width || oSec.currentStyle.width; 
+    var secFinalWidth = window.getComputedStyle(oSec).width || oSec.currentStyle.width;
 		//获取元素的最终样式的宽/高 , dom.currentStyle.width只是支持IE window.getComputedStyle(dom).width支持chrome
-		
+
 		var secPosition = oSec.getBoundingClientRect() //场景，获取元素相对viewport的绝对位置
+    console.log(secPosition)
 		//也能获取元素的真实宽/高，bottom：110，height:100，left:0，right:770.4000244140625，top:10，
 		//width:770.4000244140625，x:0，y:10
-	
-	</script>
+
+  </script>
 </body>
 </html>

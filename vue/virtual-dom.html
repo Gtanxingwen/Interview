@@ -5,11 +5,11 @@
   <title>Virtual Dom算法实现</title>
 </head>
 <body>
-<script>
-  import {StateEnums, isString, move} from './util'
-  import Element from './element'
+<script type="module">
+  import {StateEnums, isString, move} from './util/util.js'
+  import Element from './element.js'
 
-  export default function diff(oldDomTree, newDomTree) {
+  function diff(oldDomTree, newDomTree) {
     // 用于记录差异
     let pathchs = {}
     // 一开始的索引为 0
@@ -18,6 +18,7 @@
   }
 
   function dfs(oldNode, newNode, index, patches) {
+    debugger
     // 用于保存子树的更改
     let curPatches = []
     // 需要判断三种情况
@@ -194,8 +195,7 @@
     })
     return keys
   }
-</script>
-<script>
+
   let test4 = new Element('div', {class: 'my-div'}, ['test4'])
   let test5 = new Element('ul', {class: 'my-div'}, ['test5'])
 

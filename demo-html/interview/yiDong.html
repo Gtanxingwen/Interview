@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>移动</title>
+</head>
+<body>
+<script>
+  /**
+   * 单词纠正
+   * @param pWord
+   */
+  function fixedWord(pWord) {
+    let arrs = pWord.split('')
+    let result = []
+
+    let p = 0
+    let prevCount = 0
+    let count = 1
+    while (arrs.length > p) {
+      if (arrs[p] !== arrs[p + 1]) {
+        result.push(arrs[p])
+        if (count >= 2) {
+          if (prevCount < 2) {
+            result.push(arrs[p])
+            prevCount = count
+          } else {
+            prevCount = 0
+          }
+          count = 1
+        }
+      } else {
+        count++
+      }
+      p++
+    }
+    return result.join('')
+  }
+
+  console.log(fixedWord('helllo'))
+  console.log(fixedWord('hellloo'))
+  console.log(fixedWord('helloohh'))
+
+  /**
+   * @param {number[]} piles
+   * @param {number} H
+   * @return {number}
+   */
+    //输入: piles = [3,6,7,11], H = 8
+    //输出: 4
+    //输入: piles = [30,11,23,4,20], H = 5
+    //输出: 30
+  var minEatingSpeed = function (piles, H) {
+
+
+      let low = 1
+      let high = getMax(piles)
+
+      while (low < high) {
+        let mid = Math.floor((high + low) / 2)
+        if (possible(piles, H, mid)) {
+          high = mid
+        } else {
+          low = mid + 1
+        }
+      }
+      return low
+
+      function possible(piles, H, K) {
+        let time = 0
+        for (let i = 0; i < piles.length; i++) {
+          time += Math.ceil(piles[i] / K)
+        }
+        return time <= H
+      }
+
+      function getMax(array) {
+        let max = array[0]
+        for (let i = 1; i < array.length; i++) {
+          if (array[i] > max) {
+            max = array[i]
+          }
+        }
+        return max
+      }
+    }
+  console.log(minEatingSpeed([3, 6, 7, 11], 8))
+  console.log(minEatingSpeed([30, 11, 23, 4, 20], 5))
+</script>
+</body>
+</html>

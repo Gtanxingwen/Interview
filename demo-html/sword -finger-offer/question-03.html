@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>数组中重复的数字</title>
+</head>
+<body>
+<script>
+  /**
+   * @param {number[]} nums
+   * @return {number}
+   */
+  var findRepeatNumber = function (nums) {
+    let obj = {}
+    let res = -1
+    for (let i = 0; i < nums.length; i++) {
+      if (!obj[nums[i]]) {
+        obj[nums[i]] = 1
+      } else {
+        res = nums[i]
+        break
+      }
+    }
+    return res
+  };
+  const res = findRepeatNumber([2, 3, 1, 0, 2, 5, 3])
+  console.log(res)
+</script>
+</body>
+</html>

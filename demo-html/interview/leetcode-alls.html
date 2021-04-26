@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  /**
+   * @param {string} s
+   * @param {string} t
+   * @return {string}
+   */
+  var minWindow = function (s, t) {
+    if (!t || !s || s.length < t.length) return ''
+
+    let map = {}
+    let missType = 0
+
+    for (let char of t) {
+      if (!map[char]) {
+        missType++
+        map[char] = 1
+      } else {
+        map[char]++
+      }
+    }
+
+    let len = s.length
+    let left = 0
+    let right = len - 1
+    let flagL = 1
+    let flagR = 1
+
+    while (left < len && right >= 0 && right - left >= t.length) {
+      if (flagL > 1 && flagR > 1) break
+
+      const lChar = s[left]
+      const rChar = s[right]
+
+      if (!t.includes(lChar) || s.lastIndexOf(lChar) !== left && s.lastIndexOf(lChar)) {
+        left++
+      } else {
+        flagL++
+      }
+      if (!t.includes(rChar) || s.lastIndexOf(rChar) !== right && s.lastIndexOf(rChar) > left) {
+        right--
+      } else {
+        flagR++
+      }
+    }
+
+    const result = s.slice(left, right + 1)
+
+    for (let j = 0; j < t.length; j++) {
+      if (!result.includes(t[j])) {
+        return ''
+      }
+    }
+
+    return result
+  };
+  minWindow('cabwefgewcwaefgcf', 'cae')
+</script>
+</body>
+</html>

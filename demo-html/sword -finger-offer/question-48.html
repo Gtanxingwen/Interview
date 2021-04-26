@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>最长不含重复字符的子字符串</title>
+</head>
+<body>
+<script>
+  /**
+   * @param {string} s
+   * @return {number}
+   */
+  var lengthOfLongestSubstring = function (s) {
+    if (s === '') return 0
+    if (s === ' ') return 1
+    let arr = s.split('')
+    let p1 = 0, p2 = 1
+    let res = []
+    let maxCount = 1
+
+    res.push(arr[0])
+
+    while (p1 < arr.length && p2 < arr.length) {
+      if (res.includes(arr[p2])) {
+        let idx = getIndex(res, arr[p2])
+        p1 = idx + 1
+        maxCount = Math.max(maxCount, res.length)
+        res = res.slice(idx + 1)
+      } else {
+        res.push(arr[p2])
+        p2++
+      }
+    }
+    maxCount = Math.max(maxCount, res.length)
+    return maxCount
+
+    function getIndex(arr, el) {
+      return arr.findIndex(item => item === el)
+    }
+  };
+  lengthOfLongestSubstring('abcabcbb')
+  lengthOfLongestSubstring('bbbbb')
+  lengthOfLongestSubstring('pwwkew')
+</script>
+</body>
+</html>

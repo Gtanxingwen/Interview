@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>call使用</title>
+</head>
+<body>
+<h2>npm 查看安装的模块或依赖</h2>
+<p>--depth 限制层数</p>
+<ul>
+  <li>npm ls</li>
+  <li>当前目录：npm ls --depth 0</li>
+  <li>全局：npm ls -g --depth 0</li>
+</ul>
+<button id="btn" onclick="fun1()">打开新窗口</button>
+<script>
+  var name = 'XM';
+  var obj = {
+    name: 'XH',
+    ftn01: function (obj) {
+      obj.show();
+    },
+    ftn02: function (ftn) {
+      ftn();
+    },
+    ftn03: function (ftn) {
+      ftn.call(this);
+    }
+  };
+
+  function Person(name) {
+    this.name = name;
+    this.show = function () {
+      console.log('a', this.name)
+    }
+  };
+  var p = new Person('XL');
+  obj.ftn01(p);
+  obj.ftn02(function () {
+    console.log('b', this.name);
+  });
+  obj.ftn03(function () {
+    console.log('c', this.name);
+  })
+</script>
+<script>
+  // let windowObj = window.open(url, target, features, replace)
+
+  // url 打开指定页面的url,如果没有指定，打开空白页面
+
+  // target
+  // name: 窗口名称
+  // _self, _blank, _parent, _top
+
+  // features
+
+  // replace
+  // true - URL 替换浏览历史中的当前条目。
+  // false - URL 在浏览历史中创建新的条目。
+
+
+  function fun1() {
+
+    window.open(
+      "http://www.baidu.com/",
+      "WWildlifeOrgWindowName",
+      "outerWidth=600,width=500,innerWidth=400,resizable,scrollbars,status,menubar=no"
+    )
+  }
+</script>
+</body>
+</html>

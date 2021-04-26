@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>前端异常监控</title>
+  <script>
+    window.addEventListener('error', function (e) {
+      console.log('error', e)
+    }, true)
+  </script>
+  <link rel="stylesheet" href="./my.css">
+</head>
+<body>
+<ul>
+  <li>JS语法错误</li>
+  <li>Ajax请求异常</li>
+  <li>资源加载异常</li>
+  <li>Promise异常 -- 使用catch</li>
+  <li>跨域Script error</li>
+</ul>
+</body>
+<script src="./test.js"></script>
+<script>
+  //1, window.onerror 捕获错误
+
+  window.onerror = function (message, source, lineno, colno, error) {
+    console.log('捕获到异常：', {message, source, lineno, colno, error})
+  }
+  let name = 'tanxingwen'
+  console.log(nae)
+  //2, try catch捕获错误
+
+  //3，跨域script脚本加上crossorigin属性
+
+</script>
+</html>

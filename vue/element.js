@@ -1,4 +1,4 @@
-import {isString} from "./util/util";
+import {isString} from "./util/util.js";
 
 export default class Element {
   /**

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  // 实现树
+  const list = [
+    {id: 1000, parentId: 0, name: 'AA'},
+    {id: 1001, parentId: 1000, name: 'BB'},
+    {id: 1002, parentId: 1000, name: 'CC'},
+    {id: 1003, parentId: 1002, name: 'DD'},
+    {id: 1004, parentId: 1003, name: 'EE'},
+    {id: 1005, parentId: 1002, name: 'FF'},
+    {id: 1006, parentId: 1003, name: 'GG'},
+    {id: 1007, parentId: 1006, name: 'HH'}
+  ]
+
+  // 结果
+  const result = {
+    id: 1000,
+    parentId: 0,
+    name: 'AA',
+    childs: [
+      {
+        id: 1001,
+        parentId: 1000,
+        name: 'BB'
+      },
+      {
+        id: 1002,
+        parentId: 1000,
+        name: 'CC',
+        childs: [
+          {
+            id: 1003,
+            parentId: 1002,
+            name: 'DD',
+            childs: [
+              {
+                id: 1004,
+                parentId: 1003,
+                name: 'EE'
+              },
+              {
+                id: 1006,
+                parentId: 1003,
+                name: 'GG',
+                childs: [
+                  {
+                    id: 1007,
+                    parentId: 1006,
+                    name: 'HH'
+                  }
+                ]
+              },
+            ]
+          },
+          {
+            id: 1005,
+            parentId: 1002,
+            name: 'FF'
+          },
+        ]
+      }
+    ]
+  }
+
+  function printTree() {
+    let map = {}
+    list.forEach(item => {
+      map[item.id] = item
+    })
+
+
+    let result = []
+    list.forEach(item => {
+      const parent = map[item.parentId]
+      if (parent) {
+        item.level = parent.level + 1;
+        (parent.childs || (parent.childs = [])).push(item)
+      } else {
+        item.level = 1
+        result.push(item)
+      }
+    })
+
+    result.forEach(item => {
+      consoleTab(item.level, item.name)
+      printName(item.childs)
+    })
+
+    function printName(arr) {
+      if (!Array.isArray(arr)) return
+      arr.forEach(item => {
+        consoleTab(item.level, item.name)
+        if (item.childs) {
+          printName(item.childs)
+        }
+      })
+    }
+
+    function consoleTab(count, name) {
+      let prefix = ''
+      for (let i = 0; i < count; i++) {
+        prefix = prefix + '--'
+      }
+      console.log(prefix + name)
+    }
+  }
+
+  // printTree()
+</script>
+<script>
+  function convert(source, parentId = 0) {
+    let trees = [];
+    for (let item of source) {
+      if (item.parentId === parentId) {
+        let children = convert(source, item['id']);
+        if (children.length) {
+          item.children = children
+        }
+        trees.push(item);
+      }
+    }
+    return trees;
+  }
+
+  let list2 = [
+    {id: 1, name: '部门A', parentId: 0},
+    {id: 2, name: '部门B', parentId: 0},
+    {id: 3, name: '部门C', parentId: 1},
+    {id: 4, name: '部门D', parentId: 1},
+    {id: 5, name: '部门E', parentId: 2},
+    {id: 6, name: '部门F', parentId: 3},
+    {id: 7, name: '部门G', parentId: 2},
+    {id: 8, name: '部门H', parentId: 4}
+  ];
+
+  const result2 = convert(list2);
+  console.log(result2)
+</script>
+</body>
+</html>

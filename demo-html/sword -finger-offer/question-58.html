@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>左旋转字符串</title>
+</head>
+<body>
+<script>
+  /**
+   * @param {string} s
+   * @param {number} n
+   * @return {string}
+   */
+  var reverseLeftWords = function (s, n) {
+    return s.substring(n) + s.substring(0, n)
+  };
+  // 输入: s = "abcdefg", k = 2
+  // 输出: "cdefgab"
+  const str = reverseLeftWords('abcdefg', 2)
+  console.log(str)
+</script>
+</body>
+</html>

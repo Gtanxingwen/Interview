@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>常见布局</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+  </style>
+</head>
+<body>
+<div class="container float">
+  <style>
+    .float .left {
+      float: left;
+      width: 200px;
+      height: 200px;
+      background-color: #27ae60;
+    }
+
+    .float .right {
+      height: 200px;
+      background-color: #6B6BFF;
+    }
+  </style>
+  <div class="left"></div>
+  <div class="right">浮动布局：缺点：需要清除浮动，优点：兼容性好</div>
+</div>
+<hr>
+<div class="container table">
+  <style>
+    .table {
+      display: table;
+      width: 100%;
+    }
+
+    .table .left {
+      display: table-cell;
+      width: 200px;
+      height: 200px;
+      background-color: #27ae60;
+    }
+
+    .table .right {
+      display: table-cell;
+      width: auto;
+      height: 200px;
+      background-color: #6B6BFF;
+    }
+  </style>
+  <div class="left"></div>
+  <div class="right">table布局：缺点：其中任何一个格子高度增加，其他格子高度也会增加，优点：兼容性好</div>
+</div>
+<hr>
+<div class="container position">
+  <style>
+    .position {
+      position: relative;
+    }
+
+    .position .left {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      left: 0;
+      top: 0;
+      background-color: #27ae60;
+    }
+
+    .position .right {
+      position: absolute;
+      left: 200px;
+      right: 0;
+      height: 200px;
+      background-color: #6B6BFF;
+    }
+  </style>
+  <div class="left"></div>
+  <div class="right">定位布局：缺点：脱离文档流，优点：快捷</div>
+</div>
+<hr>
+<div class="container flex">
+  <style>
+    .flex {
+      display: flex;
+      margin-top: 210px;
+    }
+
+    .flex .left {
+      width: 200px;
+      height: 200px;
+      background-color: #27ae60;
+    }
+
+    .flex .right {
+      flex: 1;
+      height: 200px;
+      background-color: #6B6BFF;
+    }
+  </style>
+  <div class="left"></div>
+  <div class="right">flex布局：比较完美</div>
+</div>
+<hr>
+<div class="container grid">
+  <style>
+    .grid {
+      width: 100%;
+      display: grid;
+      grid-template-rows: 200px;
+      grid-template-columns: 200px auto;
+    }
+
+    .grid .left {
+      background-color: #27ae60;
+    }
+
+    .grid .right {
+      background-color: #6B6BFF;
+    }
+  </style>
+  <div class="left"></div>
+  <div class="right">grid布局：兼容性不好</div>
+</div>
+</body>
+</html>

@@ -9,7 +9,21 @@
 <script>
     //输入['a',['b','c'],2,]
     //输出a,b,c,2
-    var tempArray = ['a',['b', 'c'],2,['d','e','f'],'g',3,4];
+    var tempArray = ['a', ['b', [['c', ['x', ['y', 'z']]], 1]], 2, ['d', 'e', 'f'], 'g', 3, 4];
+
+    function flatArray(arrs, deep) {
+      if (!deep) return arrs;
+      return arrs.reduce((acc, cur) => {
+        if (Array.isArray(cur)) {
+          return [...acc, ...flatArray(cur, --deep)]
+        } else {
+          return [...acc, cur]
+        }
+      }, [])
+    }
+
+    console.log('===================')
+    console.log(flatArray(tempArray, 2))
     /**
      * 递归
      * @param arrObj
@@ -61,7 +75,7 @@
     }
 
     console.log(flat3(tempArray))
-    
+
     /**
      * valueOf格式转换--同理toString
      * @param arrObj
@@ -73,7 +87,7 @@
       }
       return arrObj + '';
     }
-    
+
     Array.prototype[Symbol.iterator] = function() {
       let arr = [].concat(this);
       let getFirst = function(array) {
@@ -108,6 +122,15 @@
       return result.join(',')
     }
     console.log(flat5(tempArray));
+
+    function flatReduce(arr) {
+      return arr.reduce(function (total, item) {
+        return total.concat(Array.isArray(item) ? flatReduce(item) : item)
+      }, [])
+    }
+
+    console.log(flatReduce(tempArray));
+    // flatReduce(tempArray)
 
 </script>
 

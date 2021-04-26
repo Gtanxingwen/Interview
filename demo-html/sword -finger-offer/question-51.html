@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>数组中的逆序对</title>
+</head>
+<body>
+<script>
+  // 输入: [7,5,6,4]
+  // 输出: 5
+  /**
+   * @param {number[]} nums
+   * @return {number}
+   */
+  var reversePairsBl = function (nums) {
+    let left = 0
+    let right = 1
+    let len = nums.length
+    let count = 0
+
+    while (right < len) {
+      if (nums[right] < nums[left]) {
+        count++
+        right++
+      } else {
+        right++
+      }
+
+      if (right === len) {
+        left++
+        right = left + 1
+      }
+    }
+    return count
+  };
+
+
+  var reversePairs = function (nums) {
+    if (!nums || !nums.length) return 0
+
+    function mergeSort(nums, left, right) {
+      if (left >= right) return 0
+      let mid = (left + right) >> 1
+      let count = mergeSort(nums, left, mid) + mergeSort(nums, mid + 1, right)
+      count += merge(nums, left, mid, right)
+      return count
+    }
+
+    function merge(nums, left, mid, right) {
+      let p1 = mid
+      let p2 = right
+      let count = 0
+      let help = []
+
+      while (p1 >= left && p2 > mid) {
+        if (nums[p1] > nums[p2]) {
+          help.unshift(nums[p1])
+          count = p2 - mid + count
+          p1--
+        } else {
+          help.unshift(nums[p2])
+          p2--
+        }
+      }
+      while (p1 >= left) {
+        help.unshift(nums[p1])
+        p1--
+      }
+      while (p2 > mid) {
+        help.unshift(nums[p2])
+        p2--
+      }
+      for (let i = 0; i < help.length; i++) {
+        nums[left + i] = help[i]
+      }
+      return count
+    }
+
+    return mergeSort(nums, 0, nums.length - 1)
+  }
+  const rs = reversePairs([5, 7, 6, 2])
+  console.log(rs)
+</script>
+</body>
+</html>

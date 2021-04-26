@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>手动实现call,apply,bind</title>
+</head>
+<body>
+<script>
+  // function call(thisArg, arg1, arg2)
+  // thisArg: this的指向值，null || undefined 指向全局对象
+  Function.prototype.myCall = function (thisArg) {
+    const context = thisArg || window
+    context.fn = this
+    // 将 context 后面的参数取出来
+    let args = [...arguments].slice(1)
+    let result = context.fn(...args)
+    delete context.fn
+    return result
+  }
+  const testCallObj = {
+    msg: '我是Call是测试信息'
+  }
+
+  function testCall() {
+    console.log(this.msg)
+  }
+
+  testCall.myCall(testCallObj, 1)
+
+  // function apply(thisArg, [arg1, arg2])
+  // thisArg: this的指向值，null || undefined 指向全局对象
+  Function.prototype.myApply = function (thisArg) {
+    const context = thisArg || window
+
+    context.fn = this
+
+    let result
+    if (arguments[1]) {
+      result = context.fn(...arguments[1])
+    } else {
+      result = context.fn()
+    }
+
+    delete context.fn
+    return result
+  }
+  const testApplyObj = {
+    msg: '我是Apply是测试信息'
+  }
+
+  function testApply(a, b) {
+    console.log(this.msg)
+    console.log(a)
+    console.log(b)
+  }
+
+  testApply.myApply(testApplyObj, [1, 2])
+
+  Function.prototype.myBind = function (context) {
+    const thatFn = this
+    const args = [...arguments].slice(1)
+
+    if (typeof thatFn !== 'function') {
+      throw error('Error')
+    }
+
+    return function F() {
+      if (thatFn instanceof F) {
+        return new thatFn(...args, ...arguments)
+      } else {
+        return thatFn.apply(context, args.concat(...arguments))
+      }
+    }
+  }
+
+  const module = {
+    x: 42,
+    getX: function () {
+      return this.x
+    }
+  }
+
+  const unboundGetX = module.getX
+
+  const boundGetX = unboundGetX.myBind(module)
+  console.log(boundGetX())
+
+</script>
+<script>
+  Array.prototype.myBind1 = function (context) {
+    if (typeof this !== 'function') {
+      throw error('err')
+    }
+    let that = this
+    let args = [...arguments].slice(1)
+
+    return function F() {
+      if (that instanceof F) {
+        return new that(...args, ...arguments)
+      } else {
+        return that.apply(context, args.concat(...arguments))
+      }
+    }
+  }
+  Array.prototype.myApply = function (context) {
+    let ctx = context || window
+    ctx.fn = this
+    let result
+    if (arguments[1]) {
+      result = ctx.fn(...arguments[1])
+    } else {
+      result = ctx.fn()
+    }
+    delete ctx.fn
+    return result
+  }
+
+  function debounce(fn, wait, immediate = true) {
+    let timer, context, args
+
+    let later = () => setTimeout(() => {
+      timer = null
+      if (!immediate) {
+        fn.apply(context, args)
+        context = args = null
+      }
+    }, wait)
+
+    return function (...params) {
+      if (!timer) {
+        timer = later()
+        if (!immediate) {
+          context = this
+          args = params
+        } else {
+          fn.apply(this, params)
+        }
+      } else {
+        clearTimeout(timer)
+        timer = later()
+      }
+    }
+  }
+
+  function throttle(fn, wait) {
+    let timer = null
+    return function (...params) {
+      if (!timer) {
+        timer = setTimeout(() => {
+          timer = null
+          fn.apply(this, params)
+        }, wait)
+      }
+    }
+  }
+
+  function flatDeep(arr) {
+    return Array.isArray(arr) ? arr.reduce((total, item) => {
+      return [...total, ...flatDeep(item)]
+    }, []) : [arr]
+  }
+
+  function MyNew() {
+    let obj = new Object()
+    let Con = [].shift.call(arguments)
+    obj.__proto__ = Con.prototype
+    let result = Con.apply(obj, arguments)
+    return typeof result === 'object' ? result : obj
+  }
+
+  function instanceOf(left, right) {
+    let proto = left.__proto__
+    let prototype = right.prototype
+
+    while (true) {
+      if (proto === null) {
+        return false
+      }
+      if (proto === prototype) {
+        return true
+      }
+      proto = proto.__proto__
+    }
+  }
+
+  // new Promise(function (resolve, reject) {
+  //
+  // }).then(res => {}, err => {})
+  function MyPromise(fn) {
+    this.status = 'pending'
+    this.data = undefined
+    this.err = undefined
+    let _this = this
+
+    let resolve = function (val) {
+      if (_this.status === 'pending') {
+        _this.status = 'resolved'
+        _this.value = val
+      }
+    }
+    let reject = function (err) {
+      if (_this.status === 'pending') {
+        _this.status = 'rejected'
+        _this.err = err
+      }
+    }
+
+    fn(resolve, reject)
+  }
+</script>
+</body>
+</html>

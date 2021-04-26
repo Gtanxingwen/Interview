@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>函数柯里化</title>
+</head>
+<body>
+<script>
+  // 1,保存调用curry函数时传入的参数，返回一个新函数（即柯里化执行结果）
+  // 2,结果函数在被调用后，要让新的参数和旧的参数一起应用的入参函数中
+
+  // ES5
+  var curry = function curry(fn, arr) {
+    arr = arr || []
+
+    return function () {
+      var args = [].slice.call(arguments)
+      var arg = arr.concat(args)
+
+      return arg.length >= fn.length
+        ? fn.apply(null, arg)
+        : curry(fn, arg)
+    }
+  }
+
+  // ES6
+  const curryEs6 = (fn, arr = []) =>
+    (...arg) =>
+      fn.length === [...arr, ...arg].length
+        ? fn.apply(null, [...arr, ...arg])
+        : curryEs6(fn, [...arr, ...arg])
+
+
+  let curryPlus = curryEs6(add)
+
+  function add(a, b, c, d) {
+    return a + b + c + d
+  }
+
+  console.log(curryPlus(1, 2, 3)(4)) //返回10
+  console.log(curryPlus(1, 2)(4)(3)) //返回10
+  console.log(curryPlus(1, 2)(3, 4)) //返回10
+</script>
+<script>
+  function curry(fn, arr = []) {
+
+    return function (...args) {
+      const args1 = [...arr, ...args]
+
+      if (fn.length === args1.length) {
+        return fn.apply(null, args1)
+      } else {
+        return curry(fn, [...args1])
+      }
+    }
+  }
+
+  function add(a, b, c) {
+    return a + b + c
+  }
+
+  const curryFn = curry(add)
+  console.log(curryFn(1)(2, 3))
+  console.log(curryFn(1))
+  console.log(curryFn(1, 2)(3))
+  console.log(curryFn(1, 2, 3))
+</script>
+</body>
+</html>

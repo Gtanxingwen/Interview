@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  // 我手中有一堆扑克牌， 但是观众不知道它的顺序。
+  // 第一步， 我从牌顶拿出一张牌， 放到桌子上。
+  // 第二步， 我从牌顶再拿一张牌， 放在手上牌的底部。
+  // 第三步， 重复第一步、第二步的操作， 直到我手中所有的牌都放到了桌子上。
+  // 最后， 观众可以看到桌子上牌的顺序是：(牌底部）1,2,3,4,5,6,7,8,9,10,11,12,13(牌顶部）
+  // 请问， 我刚开始拿在手里的牌的顺序是什么？
+
+  // 从手上的底部拿出一张牌， 放到牌顶部
+  // 从桌子上拿出一张牌，放到牌顶部
+
+  const inputOrders = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+
+  // [7, 10, 6, 13, 5, 9, 4, 11, 3, 8, 2, 12, 1]
+  // [12, 7, 10, 6, 13, 5, 9, 4, 11, 3, 8, 2]
+  // [12, 7, 10, 6, 13, 5, 9, 4, 11, 3, 8]
+  // [8, 12, 7, 10, 6, 13, 5, 9, 4, 11, 3]
+  // [8, 12, 7, 10, 6, 13, 5, 9, 4, 11]
+  // [11, 8, 12, 7, 10, 6, 13, 5, 9, 4]
+  // [11, 8, 12, 7, 10, 6, 13, 5, 9]
+  // [9, 11, 8, 12, 7, 10, 6, 13, 5]
+  // [9, 11, 8, 12, 7, 10, 6, 13]
+  // [13, 9, 11, 8, 12, 7, 10, 6]
+  // [13, 9, 11, 8, 12, 7, 10]
+  // [10, 13, 9, 11, 8, 12, 7]
+  // [10, 13, 9, 11, 8, 12]
+  // [12, 10, 13, 9, 11, 8]
+  // [12, 10, 13, 9, 11]
+  // [11, 12, 10, 13, 9]
+  // [11, 12, 10, 13]
+  // [13, 11, 12, 10]
+  // [13, 11, 12]
+  // [12, 13, 11]
+  // [12, 13]
+  // [13, 12]
+  // [13]
+  // []
+  function getCardsOrder(cards) {
+    const head = cards.pop()
+    let results = [head]
+
+    while (cards.length > 0) {
+      let step1Card = results.shift()
+      results.push(step1Card)
+
+      let step2Card = cards.pop()
+      results.push(step2Card)
+    }
+    return results
+  }
+
+  console.log(getCardsOrder(inputOrders))
+</script>
+
+<script>
+  // 给定 "abcabcbb" ，没有重复字符的最长子串是 "abc" ，那么长度就是3。
+  // 给定 "bbbbb" ，最长的子串就是 "b" ，长度是1。
+  // 给定 "pwwkew" ，最长子串是 "wke" ，长度是3。请注意答案必须是一个子串，"pwke" 是 子序列  而不是子串
+
+  function childStringLength(str) {
+    const arrs = str.split('')
+
+    let fast = 0
+    let low = 0
+    let max = arrs.length
+    let res = []
+    let len = 0
+
+    while (fast < max && low < max) {
+      if (res.includes(arrs[fast])) {
+        len = Math.max(len, res.length)
+        low = fast
+        res = []
+      }
+      res.push(arrs[fast])
+      fast++
+    }
+    return len
+  }
+
+  // const res1 = childStringLength('abcabcbb')
+  // const res2 = childStringLength('bbbbb')
+  // const res3 = childStringLength('pwwkew')
+  // console.log(res1)
+  // console.log(res2)
+  // console.log(res3)
+</script>
+<!--<script>-->
+<!--document.addEventListener('click', function(){-->
+<!--Promise.resolve().then(()=> console.log(1));-->
+<!--console.log(2);-->
+<!--})-->
+
+<!--document.addEventListener('click', function(){-->
+<!--Promise.resolve().then(()=> console.log(3));-->
+<!--console.log(4);-->
+<!--})-->
+<!--</script>-->
+<script>
+  // sum(1, 2).sumOf() // 返回 3
+  // sum(1, 2)(3).sumOf() // 返回 6
+  // sum(1)(2, 3, 4).sumOf() // 返回 10
+  // sum(1, 2)(3, 4)(5).sumOf() // 返回 15
+
+  import {event} from "../../project-summary/util/event";
+
+  function sum(...args) {
+    function fn() {
+      return sum(...args, ...arguments)
+    }
+
+    fn.sumOf = function () {
+      return args.reduce((total, cur) => {
+        return total + cur
+      }, 0)
+    }
+    return fn
+  }
+
+  console.log('---------------------------')
+  console.log(sum(1, 2).sumOf())
+  console.log(sum(1, 2)(3).sumOf())
+  console.log(sum(1)(2, 3, 4).sumOf())
+  console.log(sum(1, 2)(3, 4)(5).sumOf())
+
+</script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>手写代码实现</title>
+</head>
+<body>
+<script>
+  // 1,实现深拷贝
+
+  // 基础版本
+  function clone(obj) {
+    return JSON.parse(JSON.stringify(obj))
+  }
+
+  // 进阶版
+  function deepClone(obj) {
+    return new Promise((resolve, reject) => {
+      const {port1, port2} = new MessageChannel()
+      port2.onmessage = ev => resolve(ev.data)
+      port1.postMessage(obj)
+    })
+  }
+
+  // 使用
+  const obj = {a: 1, b: 2}
+  (async () => {
+    let cloneObj = await deepClone(obj)
+    console.log(cloneObj)
+  })()
+
+  // 解决问题
+  // 1 忽略undefined
+  // 2 忽略Symbol
+  // 3 不能实现序列化
+  // 4 循环引用问题
+</script>
+<script>
+  // 2,实现call,apply,bind
+
+  Function.prototype.myCall = function (thisArg) {
+    const context = thisArg || window
+    context.fn = this
+    // 取出后面的参数
+    const args = [...arguments].slice(1)
+    const result = context.fn(...args)
+    delete context.fn
+    return result
+  }
+  Function.prototype.myApply = function (thisArg) {
+    const context = thisArg || window
+    context.fn = this
+    let result
+    // 判断第二个参数是否存在
+    if (arguments[1]) {
+      result = context.fn(...arguments[1])
+    } else {
+      result = context.fn()
+    }
+    delete context.fn
+    return result
+  }
+  Function.prototype.myBind = function (thisArg) {
+    const args = [...arguments].slice(1)
+    const fn = this
+
+    if (typeof fn !== 'function') {
+      throw error('is not a function')
+    }
+
+    return function F() {
+      if (this instanceof F) {
+        return new fn(...args, ...arguments)
+      } else {
+        return fn.apply(thisArg, args.concat(...arguments))
+      }
+    }
+  }
+  const module = {
+    x: 42,
+    getX: function () {
+      return this.x
+    }
+  }
+
+  const unboundGetX = module.getX
+
+  const boundGetX = unboundGetX.myBind(module)
+  console.log(boundGetX())
+</script>
+<script type="module">
+  // 3,实现event类
+  class Event {
+    constructor() {
+      this.events = {}
+    }
+
+    // on('xx', fn)
+    on(event, fn) {
+      if (!this.events[event]) {
+        this.events[event] = []
+      }
+      this.events[event].push(fn)
+    }
+
+    // emit('xx')
+    emit() {
+      const event = [].shift.call(arguments)
+      const fns = this.events[event]
+      const args = [...arguments]
+
+      fns.forEach(fn => {
+        fn.apply(null, args)
+      })
+    }
+
+    // once('xx', fn)
+    once(event, fn) {
+      const that = this
+      if (!this.events[event]) {
+        this.events[event] = []
+      }
+      const onceFn = function () {
+        fn.apply(that, arguments)
+        that.off(event, onceFn)
+      }
+      this.events[event].push(onceFn)
+    }
+
+    off(event, fn) {
+      const fns = this.events[event]
+      if (fns) {
+        this.events[event] = fns.filter(item => item !== fn)
+      }
+    }
+  }
+
+  let myEvent = new Event()
+  myEvent.once('test', function (data) {
+    console.log('test once', data)
+  })
+  myEvent.on('test', function (data) {
+    console.log('test on', data)
+  })
+  setTimeout(() => {
+    myEvent.emit('test', 'first')
+  }, 3000)
+  setTimeout(() => {
+    myEvent.emit('test', 'last')
+  }, 6000)
+</script>
+<script>
+  // 4,实现防抖函数
+  // 将多次执行变为最后一次执行或第一次执行
+  function debounce(fn, wait = 50, immediate = true) {
+    let timer, args, context
+
+    let later = () => setTimeout(() => {
+      timer = null
+      if (!immediate) {
+        fn.apply(context, args)
+        context = args = null
+      }
+    }, wait)
+
+    return function (...params) {
+      if (!timer) {
+        timer = later()
+        if (immediate) {
+          fn.apply(this, params)
+        } else {
+          context = this
+          args = params
+        }
+      } else {
+        clearTimeout(timer)
+        timer = later()
+      }
+    }
+  }
+</script>
+<script>
+  // 5,实现节流函数
+  // 将多次执行变为每隔一段时间执行
+  function throttle(fn, wait) {
+    let timer = null
+    return function (...parmas) {
+      if (timer) return
+      timer = setTimeout(() => {
+        timer = null
+        fn.apply(null, parmas)
+      }, wait)
+    }
+  }
+</script>
+<script>
+  // 6,实现函数柯里化
+  function curry(fn, arr = []) {
+    return function (...params) {
+      let args = [...arr, ...params]
+      if (fn.length === args.length) {
+        return fn.apply(null, args)
+      } else {
+        return curry(fn, args)
+      }
+    }
+  }
+
+  // es6实现
+  const curryEs6 =
+    (fn, arr = []) =>
+      (...params) =>
+        fn.length === [...arr, ...params].length
+          ? fn.apply(null, [...arr, ...params])
+          : curryEs6(fn, [...arr, ...params])
+
+  // 使用
+  function add(a, b, c, d) {
+    return a + b + c + d
+  }
+
+  let curryFn = curryEs6(add)
+  console.log(curryFn(1)(2)(3)(4))
+  console.log(curryFn(1, 2)(3)(4))
+  console.log(curryFn(1, 2, 3)(4))
+
+</script>
+<script>
+  // 7,实现数组的reduce方法
+  Array.prototype.myReduce = function (fn, init) {
+    const arr = this
+    let total = init
+    arr.forEach((item, index, array) => {
+      total = fn(total, item, index, array)
+    })
+    return total
+  }
+  // 使用
+  const res = [2, 3, 4, 5].reduce(function (total, item, index, array) {
+    return total += item
+  }, 0)
+  console.log(res)
+  const res1 = [2, 3, 4, 5].myReduce(function (total, item, index, array) {
+    return total += item
+  }, 0)
+  console.log(res1)
+</script>
+<script>
+  // 8,实现数组扁平化
+
+  // reduce实现
+  Array.prototype.flatArray = function () {
+    return this.reduce(
+      (total, item) => Array.isArray(item) ? [...total, ...item.flatArray()] : [...total, item]
+      , [])
+  }
+  // toString实现
+  // 缺点：数字会被转换成字符串
+  function flatArr(arr) {
+    const toString = Array.prototype.toString
+    Array.prototype.toString = function () {
+      return this.join(',')
+    }
+    let res = arr.toString().split(',')
+    Array.prototype.toString = toString
+    return res
+  }
+
+  // let tempArray = ['a',['b', ['c', 'd', 'e']],2,['f'],'g',3,4]
+  // console.log(tempArray.flatArray())
+  // console.log(flatArr(tempArray))
+</script>
+<script>
+  // 9,实现new
+  function create() {
+    let obj = new Object()
+    // 获取构造函数
+    let Con = [].shift.call(arguments)
+    // 链接到原型
+    obj.__proto__ = Con.prototype
+    // 执行构造函数 绑定this
+    let result = Con.apply(obj, arguments)
+    // 保证返回的是一个对象
+    result
+    typeof result === 'object' ? result : obj
+  }
+</script>
+<script>
+  // 10,实现instanceof
+  function checkInstanceOf(left, right) {
+    let proto = left.__proto__
+    let prototype = right.prototype
+
+    while (true) {
+      if (proto === null) {
+        return false
+      }
+      if (proto === prototype) {
+        return true
+      }
+      proto = proto.__proto__
+    }
+  }
+</script>
+<script>
+  // 11,实现promise
+
+</script>
+<script>
+  // 12,实现async
+</script>
+<script>
+  // 13,实现原生ajax
+
+  function http(opt = {}) {
+    let type = opt.type.toUpperCase()
+    let url = opt.url
+    let data = opt.data
+    let params = []
+
+    for (let k in data) {
+      if (data.hasOwnProperty(k)) {
+        params.push(k + '=' + data[k])
+      }
+    }
+    // 创建xhr
+    let xhr = XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHttp')
+    // 监听请求状态改变
+    xhr.onreadystatechange = function () {
+      try {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            opt.success(xhr, xhr.responseText)
+          } else {
+            opt.error(xhr)
+          }
+        }
+      } catch (e) {
+        opt.error(xhr, e)
+      }
+    }
+    // 发送请求
+    if (type === 'GET') {
+      xhr.open('GET', url + '?' + params.join('&'), true)
+      xhr.send()
+    } else if (type === 'POST') {
+      xhr.open('POST', url, true)
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      xhr.send(params.join('&'))
+    } else {
+      throw error('暂时不支持其他类型请求')
+    }
+
+
+  }
+
+</script>
+<script>
+  // 14,实现jsonp
+
+  function jsonp(url, jsonpCallback, success) {
+    let script = document.createElement('script')
+    script.src = url
+    script.async = true
+    script.type = 'text/javascript'
+
+    window[jsonpCallback] = function (data) {
+      success && success(data)
+    }
+    document.body.appendChild(script)
+  }
+
+  jsonp('https://www.runoob.com/try/ajax/jsonp.php?jsoncallback=callbackFunction', 'callbackFunction', function (val) {
+    console.log(val)
+  })
+</script>
+
+<script>
+  // 15 实现Promise.all
+  Promise.all = function (promises) {
+    let promiseCount = 0
+    let promiseLen = promises.length
+    let result = []
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < promiseLen; i++) {
+        Promise.resolve(promises[i]).then(res => {
+          promiseCount++
+          result[i] = res
+          if (promiseLen === promiseCount) {
+            resolve(result)
+          }
+        }, err => {
+          reject(err)
+        })
+      }
+    })
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BaiDu</title>
+  <style>
+    .outer {
+      width: 200px;
+      height: 100px;
+    }
+
+    .inner {
+      width: 60px;
+      height: 60px;
+      padding-top: 20%;
+    }
+
+    .warp {
+      width: 100px;
+      height: 200px;
+      background-color: gray;
+    }
+
+    .scroll {
+      width: 100px;
+      height: 100px;
+      background-color: aquamarine;
+      overflow: scroll;
+      overscroll-behavior-y: contain;
+    }
+  </style>
+</head>
+<body>
+<div class="outer">
+  <div class="inner"></div>
+</div>
+<div class="warp">
+  <div class="scroll">
+    我是可以滚动的内容，我是可以滚动的内容，我是可以滚动的内容，我是可以滚动的内容，我是可以滚动的内容，我是可以滚动的内容，我是可以滚动的内容，我是可以滚动的内容，我是可以滚动的内容，我是可以滚动的内容，我是可以滚动的内容，我是可以滚动的内容
+  </div>
+</div>
+<script>
+  var number = 10
+
+  function fn() {
+    console.log(this.number)
+  }
+
+  var obj = {
+    number: 2,
+    show: function (fn) {
+      this.number = 3
+      fn() // this指向window
+      arguments[0]() // this指向arguments
+    }
+  };
+  obj.show(fn)
+  console.log(([]) ? true : false)
+  console.log(([] == false ? true : false))
+  console.log(({} == false) ? true : false)
+
+  // 使得a == 1 && a == 2 && a == 3
+
+  let i = 1
+  let a = new Proxy({}, {
+    get() {
+      return () => i++
+    }
+  })
+  console.log((a == 1 && a == 2 && a == 3))
+
+  function throttle(fun, wait) {
+    let timer = null
+
+    return function (...args) {
+      if (timer) return
+      timer = setTimeout(() => {
+        fun.apply(this, args)
+        timer = null
+      }, wait)
+    }
+  }
+
+  function myCall(context) {
+    let thisArgs = context || window
+
+    thisArgs.fn = this
+
+    var args = [...arguments].slice(1)
+
+    var result = thisArgs.fn(args)
+    delete thisArgs.fn
+
+    return result
+  }
+
+  function myApply(context) {
+    var context = context || window
+
+    context.fn = this
+
+    let result
+    if (arguments[1]) {
+      result = context.fn(...arguments[1])
+    } else {
+      result = context.fn()
+    }
+    delete context.fn
+    return result
+  }
+
+  // fn.bind(obj)
+  function myBind(context) {
+    if (typeof this !== 'function') {
+      throw new TypeError('error')
+    }
+
+    var _this = this
+    var args = [...arguments].slice(1)
+    return function F() {
+      if (this instanceof F) {
+        return new _this(...args, ...arguments)
+      } else {
+        return _this.apply(context, args.concat(...arguments))
+      }
+    }
+  }
+
+  function* test() {
+    let a = 1 + 2
+
+    yield 2;
+    yield 4;
+  }
+
+  function generator(cb) {
+    return (function () {
+      var obj = {
+        next: 0,
+        stop: function () {
+
+        }
+      }
+
+      return {
+        next: function () {
+          var ret = cb(obj)
+          if (ret === undefined) return {value: undefined, done: true}
+          return {
+            value: ret,
+            done: false
+          }
+        }
+      }
+    })()
+  }
+</script>
+</body>
+</html>

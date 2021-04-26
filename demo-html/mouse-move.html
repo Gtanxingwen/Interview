@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>拖拽效果</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .warp {
+      width: 200px;
+      height: 200px;
+      background-color: #f4a520;
+      position: relative;
+      top: 0;
+      left: 0;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<div class="warp">
+  clientX: 浏览器有效区域距离左侧的距离
+  pageX: clientX + scrollLeft
+  screenX: 屏幕的区域的距离左侧的距离
+  offsetX: 距离事件源左侧的距离
+</div>
+<script>
+  const oDiv = document.querySelector('.warp')
+
+  oDiv.onmousedown = function (ev) {
+
+    const e = ev || window.event
+
+    const diffX = e.clientX - oDiv.offsetLeft
+    const diffY = e.clientY - oDiv.offsetTop
+
+    debugger
+
+    document.onmousemove = function (ev) {
+      const e = ev || window.event
+      oDiv.style.left = e.clientX - diffX + 'px'
+      oDiv.style.top = e.clientY - diffY + 'px'
+    }
+
+    document.onmouseup = function (ev) {
+      document.onmousemove = null
+      document.onmouseup = null
+    }
+  }
+</script>
+</body>
+</html>

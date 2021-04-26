@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>实现promise A+规范</title>
+</head>
+<body>
+<pre>
+  可以将promise看作一个状态机，初始为pending状态，通过resolve,reject函数，将状态
+  转变为resolved,rejected状态，状态一旦改变不能再次变化
+</pre>
+<script>
+
+  const PENDING = 'pending'
+  const RESOLVED = 'resolved'
+  const REJECTED = 'rejected'
+
+  function myPromise(fn) {
+    let _this = this
+
+    _this.currentState = PENDING
+    _this.value = undefined
+
+
+    // 用于保存 then 中的回调，只有当 promise
+    // 状态为 pending 时才会缓存，并且每个实例至多缓存一个
+    _this.resolvedCallbacks = []
+    _this.rejectedCallbacks = []
+
+    _this.resolve = function (value) {
+
+      if (value instanceof MyPromise) {
+        // 如果 value 是个 Promise，递归执行
+        return value.then(_this.resolve, _this.reject)
+      }
+      setTimeout(() => {
+        // 异步执行保证执行顺序
+        if (_this.currentState === PENDING) {
+          _this.currentState = RESOLVED
+          _this.value = value
+          _this.rejectedCallbacks.forEach(cb => cb())
+        }
+      }, 0)
+    }
+    _this.reject = function (reason) {
+      setTimeout(() => {
+        // 异步执行保证执行顺序
+        if (_this.currentState === PENDING) {
+          _this.currentState = REJECTED
+          _this.value = reason
+          _this.rejectedCallbacks.forEach(cb => cb())
+        }
+
+      }, 0)
+    }
+
+    // 用于解决以下问题
+    // new Promise(() => throw Error('error))
+    try {
+      fn(_this.resolve, _this.reject)
+    } catch (e) {
+      _this.reject(e)
+    }
+
+  }
+
+  myPromise.prototype.then = function (onResolved, onRejected) {
+    let self = this
+
+    // 规范2.2.7，then必须返回一个新的promise
+    let promise2
+
+    // 规范2.2 onResolved 和 onRejected 都为可选参数
+    // 如果类型不是函数需要忽略，同时也实现了透传
+    // Promise.resolve(4).then().then().then(value => console.log(value))
+
+    onResolved = typeof onResolved === 'function' ? onResolved : v => v
+    onRejected = typeof onRejected === 'function' ? onRejected : r =>
+    throw(r)
+
+    if (self.currentState === RESOLVED) {
+      return (promise2 = new MyPromise(function (resolve, reject) {
+        // 规范 2.2.4，保证 onFulfilled，onRjected 异步执行
+        // 所以用了 setTimeout 包裹下
+        setTimeout(() => {
+          try {
+            let x = onResolved(self.value)
+            reSolutionProcedure(promise2, x, resolve, reject)
+          } catch (e) {
+            reject(e)
+          }
+        })
+      }))
+    }
+
+    if (self.currentState === REJECTED) {
+      return (promise2 = new myPromise(function (resolve, reject) {
+        setTimeout(() => {
+          try {
+            let x = onRejected(self.value)
+            reSolutionProcedure(promise2, x, resolve, reject)
+          } catch (e) {
+            reject(e)
+          }
+        })
+      }))
+    }
+
+    if (self.currentState === PENDING) {
+      return (promise2 = new myPromise(function (resolve, reject) {
+
+        self.resolvedCallbacks.push(function () {
+          try {
+            let x = onResolved(self.value)
+            reSolutionProcedure(promise2, x, resolve, reject)
+          } catch (e) {
+            reject(e)
+          }
+        })
+
+        self.rejectedCallbacks.push(function () {
+          try {
+            let x = onRejected(self.value)
+            reSolutionProcedure(promise2, x, resolve, reject)
+          } catch (e) {
+            reject(e)
+          }
+        })
+
+      }))
+    }
+
+
+    // 规范2.3
+
+    function reSolutionProcedure(promise2, x, resolve, reject) {
+      // 规范2.3.1 x 不能和 promise2相同，避免循环引用
+      if (promise2 === x) {
+        return new TypeError('Error')
+      }
+
+      // 规范2.3.2
+      // 如果x 为Promise，状态为pending需继续等待，否则执行
+      if (x instanceof myPromise) {
+        if (x.currentState === PENDING) {
+          x.then(function (value) {
+            // 再次调用该函数是为了确认 x resolve 的
+            // 参数是什么类型，如果是基本类型就再次 resolve
+            // 把值传给下个 then
+            reSolutionProcedure(promise2, value, resolve, reject)
+          })
+        } else {
+          x.then(resolve, reject)
+        }
+      }
+
+      // 规范2.3.3.3.3
+      // reject,resolve其中一个执行过的话，忽略其他的
+      let called = false
+
+      // 规范2.3.3，判断 x 是否为对象或者函数
+
+      if (x !== null && (typeof x === 'object' || typeof x === 'function')) {
+        // 规范2.3.3.2 如果不能取出then, 就reject
+        try {
+          // 规范2.3.3.1
+          let then = x.then
+          // 如果then是函数就调用x.then
+          if (typeof then === 'function') {
+            // 规范2.3.3.3
+            then.call(x, y => {
+              if (called) return
+              called = true
+              // 规范2.3.3.3.1
+              reSolutionProcedure(promise2, y, resolve, reject)
+            }, e => {
+              if (called) return
+              called = true
+              reject(e)
+            })
+          } else {
+            // 规范 2.3.3.4
+            resolve(x)
+          }
+        } catch (e) {
+          if (called) return
+          called = true
+          reject(e)
+        }
+      } else {
+        // 规范2.3.4 x为基本类型
+        resolve(x)
+      }
+
+    }
+  }
+</script>
+</body>
+</html>
